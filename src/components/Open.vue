@@ -19,7 +19,7 @@
     methods: {
     },
     created() {
-     window.location.href='https://ceshicloud-of.jslife.net/jpark-code-front/wx/getOpenIdForRedirect?reqSource=1&codeType=base&redirectUrl=http://zwvisit.indoorun.com/zslihe/CarPay';
+     window.location.href='https://ceshicloud-of.jslife.net/jpark-code-front/wx/getOpenIdForRedirect?reqSource= WX_JTC&codeType=base&redirectUrl=http://zwvisit.indoorun.com/zslihe/CarPay';
       if(window.event){
         window.event.returnValue = false;
       }
