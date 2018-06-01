@@ -16,7 +16,7 @@ Vue.use(VueRouter)
 
 
 Vue.prototype.HOST = '/api';
-
+// Axios.defaults.headers.post['Content-Type'] = 'application/json';
 //请求拦截器
 Axios.interceptors.request.use(function (config) {
   if (config.method === 'post') {

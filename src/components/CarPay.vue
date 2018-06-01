@@ -30,7 +30,6 @@
     name: 'carpay',
     data() {
       return {
-        order: {},
         url: location.href,
         logo: require('../assets/LOGO.png'),
         max: 7,
@@ -76,32 +75,15 @@
       },
       onPay() {
         // let id = this.getQueryVariable('openId')
-        let url = this.HOST + '/order/carno/pay'
-
-        let carpay = {
-          'parkCode': 'jsds20170314',
-          'carNo': this.carNo,
-          'orderType': 'VNP'
-        }
-        this.$axios.post(url, {
-          carpay
-        }).then(res => {
-          let endTime = res.data.dataItems[0].attributes.endTime
-          let startTime = res.data.dataItems[0].attributes.startTime
-          let totalFee = res.data.dataItems[0].attributes.totalFee
-          let orderNo = res.data.dataItems[0].attributes.orderNo
-          this.$router.push({
-            path: 'pay', query: {startTime: startTime, endTime: endTime, totalFee: totalFee, orderNo: orderNo}
-          })
-        }).catch(error => {
-          console.log(error)
-        })
 
 
         localStorage.setItem('carNo', this.carNo)
         this.$router.push({path: 'pay'})
       }
     },
+
+
+
     computed: {
       maxlenght: function () {
         return this.activeIndex != 0 ? this.max = 8 : this.max = 7

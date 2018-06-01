@@ -1,16 +1,19 @@
 <template>
   <div class="pay">
     <div class="header">
-      <div class="title">{{ title}}</div>
+      <div class="title">确 定 缴 费</div>
       <div class="feeinfo">
-        <div class="feetitle">{{ feetitle }}</div>
+        <div class="feetitle">停车费</div>
         <div style="padding-right: 1rem">
-          <label class="fee">{{ money }}</label><label class="rmb">¥</label>
+          <label class="fee">{{ totalFee }}</label><label class="rmb">¥</label>
         </div>
       </div>
       <div class="section">
-        <p v-for=" item in section"><span>{{ item.title}}</span><span :class="{ wx: item.last}">{{item.price}}</span>
-        </p>
+        <p ><span>车牌号码</span><span>{{  carNo }}</span></p>
+        <p><span>入场时间</span><span>{{ startTime }}</span></p>
+        <p ><span>离场时间</span><span>{{ endTime }}</span></p>
+        <p><span>停留时长</span><span>555</span></p>
+        <p><span>支付方式</span><span class="wx">微信支付</span></p>
       </div>
       <div class="btn" @click="dopay">立即缴费</div>
     </div>
@@ -23,42 +26,54 @@
     name: 'pay',
     data() {
       return {
-        title: '确 定 缴 费',
-        feetitle: '停车费',
         money: this.$route.query.totalFee,
-        carNo: sessionStorage.getItem('carNo'),
-        section: [
-          {title: '车牌号码', price: localStorage.getItem('carNo')},
-          {title: '入场时间', price: this.$route.query.startTime},
-          {title: '离场时间', price: this.$route.query.endTime},
-          {title: '停留时长', price: '2'},
-          {title: '支付方式', price: '微信支付', last: true}
-        ],
+        carNo: localStorage.getItem('carNo'),
+        endTime: '',
+        startTime: '',
+        totalFee: '25',
+        orderNo: ''
       }
-
     },
     created() {
-      let url = this.HOST + '/pay/prepay'
-      let pay={
-        'orderNo': this.$route.query.orderNo,
-        'appType': 'SERVICE',
-        'payType': 'JSAPI'
+
+      let url = this.HOST + '/order/carno/pay'
+
+      let carpay = {
+        'parkCode': 'jsds20170314',
+        'carNo': this.carNo,
+        'orderType': 'VNP'
       }
-      this.$axios.post(url, {
-       pay
 
-      }).then(res => {
+      this.$axios.post(url, carpay).then(res => {
+        console.log(JSON.stringify(res))
+        let { endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
+        this.endTime=endTime
+        this.startTime=startTime
+        this.totalFee=totalFee
+        this.orderNo=orderNo
 
-        console.log(res.ServiceResponseData)
       }).catch(error => {
         console.log(error)
       })
+
+
     },
 
     methods: {
       dopay: function () {
+        let url = this.HOST + '/pay/prepay'
 
-        this.$emit('payorder')
+        this.$axios.post(url, {
+          'orderNo': '8a644a4b24a64d79b091579a2444575d',
+          'appType': 'SERVICE',
+          'payType': 'JSAPI'
+        }).then(res => {
+
+          console.log(res.ServiceResponseData)
+        }).catch(error => {
+          console.log(error)
+        })
+
       }
     }
   }
