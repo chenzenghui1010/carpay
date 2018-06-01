@@ -7,7 +7,7 @@ import Axios from 'axios'
 import qs from 'qs'
 
 
-import CarPay from './components/CarPay'
+import carpay from './components/CarPay'
 import open from './components/Open'
 import pay from './components/Pay'
 
@@ -41,10 +41,10 @@ Vue.config.productionTip = false
 const router = new VueRouter({
 
   routes: [
-    {path: '/', component: open},
-    {path: '/CarPay', component: CarPay},
+    {path: '/open', component: open},
+    {path: '/', component: carpay},
     {path: '/pay', component: pay}
-  ],mode:'history'
+  ]
 
 })
 

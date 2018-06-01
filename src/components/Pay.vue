@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="section">
-        <p v-for=" (item ,index) in section"><span>{{ item.title}}</span><span :class="{ wx: item.last}">{{item.price}}</span>
+        <p v-for=" item in section"><span>{{ item.title}}</span><span :class="{ wx: item.last}">{{item.price}}</span>
         </p>
       </div>
       <div class="btn" @click="dopay">立即缴费</div>
@@ -25,13 +25,13 @@
       return {
         title: '确 定 缴 费',
         feetitle: '停车费',
-        money: '25',
+        money: this.$route.query.totalFee,
         carNo: sessionStorage.getItem('carNo'),
         section: [
           {title: '车牌号码', price: localStorage.getItem('carNo')},
-          {title: '入场时间', price: '2018/05/30 10:10'},
-          {title: '离场时间', price: '2018/05/31 10:10'},
-          {title: '停留时长', price: '24:00:00'},
+          {title: '入场时间', price: this.$route.query.startTime},
+          {title: '离场时间', price: this.$route.query.endTime},
+          {title: '停留时长', price: '2'},
           {title: '支付方式', price: '微信支付', last: true}
         ],
       }
@@ -39,11 +39,16 @@
     },
     created() {
       let url = this.HOST + '/pay/prepay'
+      let pay={
+        'orderNo': this.$route.query.orderNo,
+        'appType': 'SERVICE',
+        'payType': 'JSAPI'
+      }
       this.$axios.post(url, {
-        orderNo: '',
-        appType: '',
-        payType: ''
+       pay
+
       }).then(res => {
+
         console.log(res.ServiceResponseData)
       }).catch(error => {
         console.log(error)

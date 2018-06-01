@@ -12,8 +12,6 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api':{
-        // http://zwvisit.indoorun.com
-        //http://jsonplaceholder.typicode.com
         target:'https://ceshicloud-of.jslife.net/jparking-service',
         changeOrigin:true,
         pathRewrite:{

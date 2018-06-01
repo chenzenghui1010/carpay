@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>url:https://www.baidu.com/s?ie=utf-8&name=111</p>
 
   </div>
 </template>
@@ -10,16 +9,12 @@
     name: 'open',
     data() {
       return {
+
       }
     },
-
-    computed: {
-
-    },
-    methods: {
-    },
     created() {
-     window.location.href='https://ceshicloud-of.jslife.net/jpark-code-front/wx/getOpenIdForRedirect?reqSource= WX_JTC&codeType=base&redirectUrl=http://zwvisit.indoorun.com/zslihe/CarPay';
+
+      window.location.href='https://ceshicloud-of.jslife.net/jpark-code-front/wx/getOpenIdForRedirect?reqSource= WX_JTC&codeType=base&redirectUrl=http://zwvisit.indoorun.com/zslihe/carpay';
       if(window.event){
         window.event.returnValue = false;
       }

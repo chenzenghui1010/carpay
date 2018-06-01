@@ -10,9 +10,9 @@
             </li>
           </ul>
         </nav>
-        <p>请输入车牌号：<input type="text" ref="input" :maxlength="maxlenght" v-model="carNo" placeholder="请输入"></p>
+        <p>请输入车牌号：<input type="text" ref="input" :maxlength="maxlenght" v-model="carNo"></p>
         <ul class="listi">
-          <li v-for=" (listI,index ) in listInput" v-show=" listI.isShow"><input maxlength="1" type="text" v-model="listI.carNum" >
+          <li v-for="listI in listInput" v-show=" listI.isShow"><input maxlength="1" type="text" v-model="listI.carNum">
           </li>
         </ul>
       </div>
@@ -24,18 +24,17 @@
     </section>
   </div>
 </template>
+
 <script>
   export default {
     name: 'carpay',
-
     data() {
       return {
-
-        order:{},
+        order: {},
         url: location.href,
         logo: require('../assets/LOGO.png'),
         max: 7,
-        carNo: localStorage.getItem('carNo'),
+        carNo: '',
         navS: ['一般车牌', '新能源车', '香 港', '澳 门', '领事馆'],
         listInput: [{carNum: '', isShow: true}, {carNum: '', isShow: true}, {carNum: '', isShow: true},
           {carNum: '', isShow: true}, {'carNum': '', isShow: true}, {carNum: '', isShow: true},
@@ -48,28 +47,13 @@
     mounted() {
       this.$refs['input'].focus();
     },
-
     created() {
+      this.carNo = localStorage.getItem('carNo')
 
-      let id=this.getQueryVariable('openId')
-      let url=this.HOST + '/order/carno/pay'
-      this.$axios.post(url,{
-        parkCode:id,
-        carNo:this.carNo,
-        orderType:'VNP'
-      }).then(res => {
-        this.order=res.ServiceResponseData
-        this.$router.push({path:'pay',query:{data:this.order}})
-      }).catch(error =>{
-         console.log(error)
-      })
-      for( let i=0; i<this.carNo.length;i++){
-        this.listInput[i].carNum=this.carNo.slice(i,i+1)
+      for (let i = 0; i < this.carNo.length; i++) {
+        this.listInput[i].carNum = this.carNo.slice(i, i + 1)
       }
-
     },
-
-
     methods: {
       getQueryVariable: function (variable) {
         var query = window.location.search.substring(1);
@@ -82,40 +66,51 @@
         }
         return (false);
       },
-
-
-
-
       showColor(index) {
         this.activeIndex = index;
-
         if (this.activeIndex != 0) {
           this.listInput[7].isShow = true;
-
         } else {
           this.listInput[7].isShow = false;
-
         }
-
-        // alert(this.listS[index])
       },
-
       onPay() {
-        localStorage.setItem('carNo',this.carNo)
-        this.$router.push({path:'pay'})
+        // let id = this.getQueryVariable('openId')
+        let url = this.HOST + '/order/carno/pay'
+
+        let carpay = {
+          'parkCode': 'jsds20170314',
+          'carNo': this.carNo,
+          'orderType': 'VNP'
+        }
+        this.$axios.post(url, {
+          carpay
+        }).then(res => {
+          let endTime = res.data.dataItems[0].attributes.endTime
+          let startTime = res.data.dataItems[0].attributes.startTime
+          let totalFee = res.data.dataItems[0].attributes.totalFee
+          let orderNo = res.data.dataItems[0].attributes.orderNo
+          this.$router.push({
+            path: 'pay', query: {startTime: startTime, endTime: endTime, totalFee: totalFee, orderNo: orderNo}
+          })
+        }).catch(error => {
+          console.log(error)
+        })
+
+
+        localStorage.setItem('carNo', this.carNo)
+        this.$router.push({path: 'pay'})
       }
     },
     computed: {
       maxlenght: function () {
         return this.activeIndex != 0 ? this.max = 8 : this.max = 7
       }
-
     },
-    updated () {
+    updated() {
       if (this.activeIndex != 0) {
         for (let i = 0; i < this.listInput.length; i++) {
           this.listInput[i].carNum = this.carNo.slice(i, i + 1)
-
         }
       } else {
         for (let j = 0; j < this.listInput.length - 1; j++) {
@@ -124,7 +119,6 @@
       }
     }
   }
-
 </script>
 
 <style scoped>
@@ -164,9 +158,7 @@
     background: rgb(161, 125, 113);
     border-radius: 10px;
   }
-p{
-  font-size: 1.8rem;
-}
+
   .section nav ul {
     display: flex;
     background: rgb(135, 96, 79);
@@ -182,7 +174,7 @@ p{
     outline: none;
     color: rgb(135, 96, 79);
     font-size: 18px;
-    width: 50%;
+    width: 60%;
   }
 
   .section nav ul li {
@@ -218,7 +210,9 @@ p{
     height: 32px;
     border: none;
     text-align: center;
-    line-height: 32px;
+    line-height: 30px;
+    outline: none;
+    margin: auto;
     font-size: 20px;
   }
 
