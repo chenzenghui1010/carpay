@@ -1,6 +1,5 @@
 <template>
   <div>
-
   </div>
 </template>
 
@@ -13,8 +12,7 @@
       }
     },
     created() {
-
-      window.location.href='https://ceshicloud-of.jslife.net/jpark-code-front/wx/getOpenIdForRedirect?reqSource= WX_JTC&codeType=base&redirectUrl=http://zwvisit.indoorun.com/zslihe/carpay';
+       window.location.href='https://ceshicloud-of.jslife.net/jpark-code-front/wx/getOpenIdForRedirect?reqSource= WX_JTC&codeType=base&redirectUrl=http://zwvisit.indoorun.com/zslihe/carpay';
       if(window.event){
         window.event.returnValue = false;
       }

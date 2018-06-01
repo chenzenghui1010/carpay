@@ -74,14 +74,11 @@
         }
       },
       onPay() {
-        // let id = this.getQueryVariable('openId')
-
-
+        let id = this.getQueryVariable('openId')
         localStorage.setItem('carNo', this.carNo)
         this.$router.push({path: 'pay'})
       }
     },
-
 
 
     computed: {

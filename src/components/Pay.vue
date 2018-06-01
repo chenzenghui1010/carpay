@@ -9,9 +9,9 @@
         </div>
       </div>
       <div class="section">
-        <p ><span>车牌号码</span><span>{{  carNo }}</span></p>
+        <p><span>车牌号码</span><span>{{  carNo }}</span></p>
         <p><span>入场时间</span><span>{{ startTime }}</span></p>
-        <p ><span>离场时间</span><span>{{ endTime }}</span></p>
+        <p><span>离场时间</span><span>{{ endTime }}</span></p>
         <p><span>停留时长</span><span>555</span></p>
         <p><span>支付方式</span><span class="wx">微信支付</span></p>
       </div>
@@ -26,7 +26,6 @@
     name: 'pay',
     data() {
       return {
-        money: this.$route.query.totalFee,
         carNo: localStorage.getItem('carNo'),
         endTime: '',
         startTime: '',
@@ -43,33 +42,28 @@
         'carNo': this.carNo,
         'orderType': 'VNP'
       }
-
       this.$axios.post(url, carpay).then(res => {
         console.log(JSON.stringify(res))
-        let { endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
-        this.endTime=endTime
-        this.startTime=startTime
-        this.totalFee=totalFee
-        this.orderNo=orderNo
+        let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
+        this.endTime = endTime
+        this.startTime = startTime
+        this.totalFee = totalFee
+        this.orderNo = orderNo
 
       }).catch(error => {
         console.log(error)
       })
-
-
     },
-
     methods: {
       dopay: function () {
         let url = this.HOST + '/pay/prepay'
-
         this.$axios.post(url, {
-          'orderNo': '8a644a4b24a64d79b091579a2444575d',
+          'orderNo': this.orderNo,
           'appType': 'SERVICE',
           'payType': 'JSAPI'
         }).then(res => {
 
-          console.log(res.ServiceResponseData)
+          console.log(res.data)
         }).catch(error => {
           console.log(error)
         })
