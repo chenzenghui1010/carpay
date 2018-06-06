@@ -21,11 +21,13 @@
 </template>
 
 <script>
+  import { WxManager} from "../wxPay";
+
   export default {
     name: 'pay',
     data() {
       return {
-        callbackUrl: 'http://www.baidu.com',
+        callbackUrl: window.callbackUrl,
         carNo: localStorage.getItem('carNo'),
         endTime: this.$route.query.endTime,
         startTime: this.$route.query.startTime,
@@ -35,6 +37,7 @@
         totalFee: this.$route.query.totalFee,
         orderNo: this.$route.query.orderNo,
         openId: this.$route.query.openId,
+        payData:'',
       }
     },
     created() {
@@ -50,10 +53,19 @@
           'openId': this.openId,
           'callbackUrl':this.callbackUrl
         }
-        let url = '/jparking-service/pay/prepay'
+        let url = 'https://ceshicloud-of.jslife.net/jparking-service/pay/prepay'
         this.$axios.post(url, carinfo).then(res => {
-          alert(JSON.stringify(res))
+          let packagename = JSON.parse(JSON.parse(res.data.attributes.payPara).payPara).package
+        let {  appId, timeStamp, nonceStr,  signType, paySign } =
+          JSON.parse(JSON.parse(res.data.attributes.payPara).payPara)
+           WxManager.pay(appId, timeStamp, nonceStr, packagename, signType, paySign, ()=>{
+
+           }, ()=>{
+
+           })
+
         }).catch(error => {
+
           console.log(error)
         })
       }

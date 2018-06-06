@@ -38,7 +38,7 @@
     name: 'carpay',
     data() {
       return {
-        parkCode: 'jsds20170314',
+        parkCode: window.parkCode ,
         url: location.href,
         logo: require('../assets/LOGO.png'),
         max: 7,
@@ -63,19 +63,6 @@
 
     },
     methods: {
-      focus: function () {
-        this.listInput[0].carNum.focus();
-      },
-      next: function () {
-        for (let i = 0; i < this.listInput.length; i++) {
-          if (this.listInput[i].carNum.length == 1) {
-
-          }
-
-        }
-
-      },
-
       getQueryVariable: function (variable) {
         var query = window.location.search.substring(1);
         var vars = query.split("&");
@@ -97,9 +84,8 @@
       },
       onPay() {
         let id = this.getQueryVariable('clientId')
-         localStorage.setItem('carNo', this.carNo)
-        // https://ceshicloud-of.jslife.net
-        let url = '/jparking-service/order/carno/pay'
+           localStorage.setItem('carNo', this.carNo.toUpperCase())
+        let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
         var carpay = {
           'parkCode': this.parkCode,
           'carNo': this.carNo,
@@ -140,10 +126,12 @@
       if (this.activeIndex != 0) {
         for (let i = 0; i < this.listInput.length; i++) {
           this.listInput[i].carNum = this.carNo.slice(i, i + 1).toUpperCase()
+
         }
       } else {
         for (let j = 0; j < this.listInput.length - 1; j++) {
           this.listInput[j].carNum = this.carNo.slice(j, j + 1).toUpperCase()
+
         }
       }
     },
@@ -154,7 +142,7 @@
           el.focus()
         }
       }
-    }
+    },
   }
 </script>
 
