@@ -12,7 +12,7 @@
         <p><span>车牌号码</span><span>{{  carNo }}</span></p>
         <p><span>入场时间</span><span>{{ startTime }}</span></p>
         <p><span>离场时间</span><span>{{ endTime }}</span></p>
-        <p><span>停留时长</span><span>555</span></p>
+        <p><span>停留时长</span><span>{{days }}{{hours}}{{ minutes}}</span></p>
         <p><span>支付方式</span><span class="wx">微信支付</span></p>
       </div>
       <div class="btn" @click="dopay">立即缴费</div>
@@ -21,53 +21,55 @@
 </template>
 
 <script>
-
   export default {
     name: 'pay',
     data() {
       return {
+        callbackUrl: 'http://www.baidu.com',
         carNo: localStorage.getItem('carNo'),
-        endTime: '',
-        startTime: '',
-        totalFee: '25',
-        orderNo: ''
+        endTime: this.$route.query.endTime,
+        startTime: this.$route.query.startTime,
+        days: '',
+        hours: '',
+        minutes: '',
+        totalFee: this.$route.query.totalFee,
+        orderNo: this.$route.query.orderNo,
+        openId: this.$route.query.openId,
       }
     },
     created() {
-
-      let url = this.HOST + '/order/carno/pay'
-
-      let carpay = {
-        'parkCode': 'jsds20170314',
-        'carNo': this.carNo,
-        'orderType': 'VNP'
-      }
-      this.$axios.post(url, carpay).then(res => {
-        console.log(JSON.stringify(res))
-        let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
-        this.endTime = endTime
-        this.startTime = startTime
-        this.totalFee = totalFee
-        this.orderNo = orderNo
-
-      }).catch(error => {
-        console.log(error)
-      })
+      this.time
     },
     methods: {
       dopay: function () {
-        let url = this.HOST + '/pay/prepay'
-        this.$axios.post(url, {
+        let carinfo = {
           'orderNo': this.orderNo,
           'appType': 'SERVICE',
-          'payType': 'JSAPI'
-        }).then(res => {
-
-          console.log(res.data)
+          'payType': 'JSAPI',
+          'channelId': 'WX',
+          'openId': this.openId,
+          'callbackUrl':this.callbackUrl
+        }
+        let url = '/jparking-service/pay/prepay'
+        this.$axios.post(url, carinfo).then(res => {
+          alert(JSON.stringify(res))
         }).catch(error => {
           console.log(error)
         })
-
+      }
+    },
+    computed: {
+      time: function () {
+        let end = this.endTime.replace(/-/g, '/'), start = this.startTime.replace(/-/g, '/')
+        let endTimes = new Date(end).getTime(), srartTimes = new Date(start).getTime()
+        let duration = endTimes - srartTimes
+        let dsy =parseInt(duration / (3600000 * 24))//1000*60*60 天
+        let minute=parseInt((duration % (3600000)) / (60000 ))//1000*60 分
+        let hour=parseInt((duration % (3600000 * 24)) / ( 3600000)) //小时
+        let days =(dsy > 0 ? dsy +'天' : '');
+        let hours =(hour > 0 ? hour+'小时' : '' );
+        let minutes = (minute > 0 ? minute +'分钟' : '');
+        return this.days = days , this.hours = hours, this.minutes = minutes
       }
     }
   }
@@ -75,6 +77,7 @@
 </script>
 
 <style scoped>
+
   .pay {
     position: absolute;
     background: #313235;
@@ -123,12 +126,12 @@
     font-size: 1.4rem;
     padding-top: 2.5rem;
     align-self: flex-start;
-    padding-left: 1.4rem;
+    padding-left: 0.8rem;
     color: #2d2f3b;
   }
 
   .fee {
-    font-size: 9.4rem;
+    font-size: 6rem;
     color: #ff473d;
     font-weight: bold;
   }

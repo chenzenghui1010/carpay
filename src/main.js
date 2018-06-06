@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import VueRouter from 'vue-router'
 import Axios from 'axios'
-// import moment from 'moment'
 import qs from 'qs'
 
 
@@ -15,13 +14,11 @@ import pay from './components/Pay'
 Vue.prototype.$axios = Axios;
 Vue.use(VueRouter)
 
-Vue.prototype.HOST = '/api';
-Axios.defaults.headers.post['Content-Type'] = 'application/json';
+
+
 //请求拦截器
 Axios.interceptors.request.use(function (config) {
-  if (config.method === 'post') {
-    config.data = qs.stringify(config.data)
-  }
+
   return config;
 }, function (error) {
   return Promise.reject(error);
@@ -41,8 +38,8 @@ Vue.config.productionTip = false
 const router = new VueRouter({
 
   routes: [
-    {path: '/', component: open},
-    {path: '/carpay', component: carpay},
+    {path: '/open', component: open},
+    {path: '/', component: carpay},
     {path: '/pay', component: pay}
   ]
 
