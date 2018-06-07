@@ -2,7 +2,7 @@
   <div class="carpay">
     <div v-if="cup" :class={cup:cup}>
       <div :class={alert:cup}>
-        <p>没找到对应的入场记录</p>
+        <p>{{ alert }}</p>
         <p @click="close">确 定</p>
       </div>
     </div>
@@ -16,10 +16,9 @@
             </li>
           </ul>
         </nav>
-
         <p>请输入车牌号：<input v-focus type="text" :maxlength="maxlenght" v-model="carNo"></p>
         <ul class="listi">
-          <li v-for="listI in listInput" ref="input" v-show=" listI.isShow"><input maxlength="1" type="text"
+          <li v-for="listI in listInput"v-show=" listI.isShow"><input readonly maxlength="1" type="text"
                                                                                    v-model="listI.carNum">
           </li>
         </ul>
@@ -49,6 +48,7 @@
           {carNum: '', isShow: true}, {
             carNum: '', isShow: false
           }],
+        alert:'',
         activeIndex: 0,
         cup: false,
 
@@ -83,6 +83,12 @@
         }
       },
       onPay() {
+        if(this.carNo.trim() == '' || this.carNo.trim() == null){
+          this.cup = true
+          this.alert = '车牌号不可以为空'
+          return
+        }
+        this.alert='没找到对应的入场记录'
         let id = this.getQueryVariable('clientId')
            localStorage.setItem('carNo', this.carNo.toUpperCase())
         let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
