@@ -2,3 +2,6 @@ window.openUrl='https://ceshicloud-of.jslife.net/jpark-code-front/wx/getOpenIdFo
 window.redirectUrl='http://zwvisit.indoorun.com/zslihe/carpay/#/carpay'
 window.parkCode= 'jsds20170314'
 window.callbackUrl='http://www.baidu.com'
+window.merchantCode='880085202558012'
+window.jparkingURL='https://ceshicloud-of.jslife.net/jparking-service/'
+window.payUrl='https://ceshicloud-of.jslife.net/jscsp-front/qrcode/html/cashier.html?payParam'

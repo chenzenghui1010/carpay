@@ -5,7 +5,6 @@
 
 <script>
 
-
   export default ({
     name: 'open',
     data() {
@@ -15,11 +14,10 @@
       }
     },
     created() {
-       window.location.href=window.openUrl+'?reqSource=WX_JTC&codeType=base&redirectUrl='+window.redirectUrl;
+      window.location.href=window.openUrl+'?reqSource=WX_JTC&codeType=base&redirectUrl='+window.redirectUrl;
       if (window.event) {
         window.event.returnValue = false;
       }
-
     },
 
   })

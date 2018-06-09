@@ -1,68 +1,102 @@
 <template>
-  <div class="carpay">
-    <div v-if="cup" :class={cup:cup}>
-      <div :class={alert:cup}>
-        <p>{{ alert }}</p>
-        <p @click="close">确 定</p>
+  <div class="main">
+    <div class="car"></div>
+    <div class="inputitem" v-on:click="doinput">
+      <div v-for="i in count" v-bind:class="getchunkstyle(i - 1)" v-bind:key="i">{{ getLetter(i - 1) }}</div>
+    </div>
+    <div class="tip">
+      <div style="font-size: 1.4rem;">车辆入场后，可查看停车信息</div>
+      <div class="checkbox">
+        <input type="checkbox" id="checkbox1" v-model="newresourcecar">
+        <label for="checkbox1"></label>新能源车
       </div>
     </div>
-      <img class="logo" :src='logo' height="100" width="60%"/>
-    <section>
-      <div class="section">
-        <nav>
-          <ul>
-            <li v-for=" (nav,index) in navS" :class="{active:activeIndex==index}" @click="showColor(index)">{{ nav
-              }}
-            </li>
-          </ul>
-        </nav>
-        <p>请输入车牌号：<input v-focus type="text" :maxlength="maxlenght" v-model="carNo"></p>
-        <ul class="listi">
-          <li v-for="listI in listInput"v-show=" listI.isShow"><input readonly maxlength="1" type="text"
-                                                                                   v-model="listI.carNum">
-          </li>
-        </ul>
-      </div>
-      <div class="btn">
-        <ul>
-          <li @click="onPay"> 确 定</li>
-        </ul>
-      </div>
-    </section>
+    <div v-bind:class="btnstyle" v-on:click="doquery">查询车辆</div>
+    <carnokeyboard v-on:select="selectletter" v-on:delete="deleteletter" v-show="begininput"
+                   v-bind:inputtype="inputtype"></carnokeyboard>
+
+
+    <div class="img">
+      <img :src="logo" alt="">
+    </div>
+    <div class="alert" v-if="show">
+      <p>{{alert}}</p>
+    </div>
+
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'carpay',
-    data() {
-      return {
-        parkCode: window.parkCode ,
-        url: location.href,
-        logo: require('../assets/LOGO.png'),
-        max: 7,
-        carNo: '',
-        navS: ['一般车牌', '新能源车'],
-        listInput: [{carNum: '', isShow: true}, {carNum: '', isShow: true}, {carNum: '', isShow: true},
-          {carNum: '', isShow: true}, {'carNum': '', isShow: true}, {carNum: '', isShow: true},
-          {carNum: '', isShow: true}, {
-            carNum: '', isShow: false
-          }],
-        alert:'',
-        activeIndex: 0,
-        cup: false,
 
+  import Carnokeyboard from "./keyboard.vue";
+  export default {
+    components: {Carnokeyboard},
+    name: 'querycar',
+    data: function () {
+      return {
+        carno: '',
+        enable: false,
+        begininput: false,//键盘
+        count: 7,
+        newresourcecar: false,
+        inputindex: 0,
+        parkCode: window.parkCode,
+        url: location.href,
+        carNo: '',
+        logo: require('../assets/LOGO.png'),
+        show: false,
+        alert: '',
       }
     },
     created() {
-      this.carNo = localStorage.getItem('carNo')
-      for (let i = 0; i < this.carNo.length; i++) {
-        this.listInput[i].carNum = this.carNo.slice(i, i + 1)
-      }
-      this.focus
 
     },
+
+    watch: {
+      carno: function (newvalue) {
+
+        this.enable = newvalue.length > 4
+      },
+      newresourcecar: function (newvalue) {
+
+        this.count = this.newresourcecar ? 8 : 7
+      }
+    },
+    computed: {
+
+      inputtype: function () {
+
+        if (this.inputindex == 0) {
+
+          return 0
+        }
+
+        if (this.inputindex == 1) {
+
+          return 1
+        }
+
+        if (this.inputindex == 6) {
+
+          return 3
+        }
+
+        return 2
+      },
+      btnstyle: function () {
+
+        if (this.enable) {
+
+          return 'btn enable'
+        }
+
+        return 'btn disable'
+      },
+    },
+
     methods: {
+
+      //截取
       getQueryVariable: function (variable) {
         var query = window.location.search.substring(1);
         var vars = query.split("&");
@@ -74,23 +108,28 @@
         }
         return (false);
       },
-      showColor(index) {
-        this.activeIndex = index;
-        if (this.activeIndex != 0) {
-          this.listInput[7].isShow = true;
-        } else {
-          this.listInput[7].isShow = false;
+
+
+      getLetter: function (index) {
+
+        if (index >= this.carno.length) {
+
+          return ''
         }
+
+        return this.carno[index]
       },
-      onPay() {
-        if(this.carNo.trim() == '' || this.carNo.trim() == null){
-          this.cup = true
-          this.alert = '车牌号不可以为空'
-          return
+      doquery: function () {
+
+
+
+        let value = document.getElementsByClassName('chunk')
+        for (var i = 0; i < value.length; i++) {
+          this.carNo += value[i].innerHTML
         }
-        this.alert='没找到对应的入场记录'
+        sessionStorage.setItem('carNo', this.carNo)
+
         let id = this.getQueryVariable('clientId')
-           localStorage.setItem('carNo', this.carNo.toUpperCase())
         let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
         var carpay = {
           'parkCode': this.parkCode,
@@ -99,7 +138,7 @@
         }
         this.$axios.post(url, carpay).then(res => {
           if (res.data.resultCode == 0) {
-            if (res.data.dataItems[0].attributes.retmsg != '没找到对应的入场记录') {
+            if (res.data.dataItems[0].attributes.retcode == '0') {
               let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
               this.$router.push({
                 path: 'pay',
@@ -112,213 +151,286 @@
                 }
               })
             } else {
-              this.cup = true
+              this.show=true
+              this.alert=res.data.dataItems[0].attributes.retmsg
+              setTimeout(()=>{
+                this.show=false
+                this.carNo=''
+              },1000)
+              return
             }
+          } else {
+            this.show=true
+            this.alert='系统异常'
+            setTimeout(()=>{
+              this.show=false
+              this.carNo=''
+            },1000)
+            return
           }
-        }).catch(error => {
-          console.log(error)
         })
       },
-      close() {
-        this.cup = false
+
+      doinput: function () {
+
+        if (this.begininput) {
+
+          return
+        }
+        this.carno = ''
+
+        this.begininput = true
+
+        this.inputindex = 0
       }
-    },
-    computed: {
-      maxlenght: function () {
-        return this.activeIndex != 0 ? this.max = 8 : this.max = 7
+      ,
+      deleteletter: function () {
+
+        this.inputindex = Math.max(0, this.inputindex - 1)
+
+        this.carno = this.carno.substr(0, this.inputindex)
+      }
+      ,
+      selectletter: function (value) {
+
+        this.carno = this.carno + value
+
+        this.inputindex += 1
+      }
+      ,
+      getchunkstyle: function (index) {
+
+        if (!this.newresourcecar) {
+
+          if (index == 0 && this.carno.length >= 1) {
+
+            return 'chunk bluecolor'
+          }
+
+          return 'chunk noe'
+        }
+        else {
+
+          if (index == 0 && this.carno.length >= 1) {
+
+            return 'chunk deepgreencolor'
+          }
+
+          return 'chunk greencolor'
+        }
       },
     },
-    updated() {
-      if (this.activeIndex != 0) {
-        for (let i = 0; i < this.listInput.length; i++) {
-          this.listInput[i].carNum = this.carNo.slice(i, i + 1).toUpperCase()
+
+    updated: function () {
+      if (this.count == 7) {
+
+        let close = document.getElementsByClassName('chunk')[6].innerText
+
+        if (close != '') {
+
+          this.begininput = false
+        }
+
+      }
+      if (this.count == 8) {
+
+        let closeT = document.getElementsByClassName('chunk')[7].innerText
+
+        if (closeT != '') {
+
+          this.begininput = false
 
         }
-      } else {
-        for (let j = 0; j < this.listInput.length - 1; j++) {
-          this.listInput[j].carNum = this.carNo.slice(j, j + 1).toUpperCase()
 
-        }
       }
-    },
-    directives: {
-      focus: {
-        // 指令的定义
-        inserted: function (el) {
-          el.focus()
-        }
-      }
-    },
+
+    }
+
+
   }
+
 </script>
 
 <style scoped>
-  * {
-    margin: 0;
-    padding: 0;
-  }
-
-  li {
-    list-style: none;
-  }
-
-  .cup {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, .3);
-    z-index: 99;
-  }
 
   .alert {
     position: absolute;
-    width: 80%;
-    height: 200px;
-    background: #fff;
-    z-index: 999;
-    margin: 50% 10% 0 10%;
-    border-radius: 10px;
+    margin: 65%  auto;
+    height: 5rem;
+    width: 25rem;
+    background: rgba(45, 47, 59, 0.50);
+    border-radius: 50px;
   }
 
   .alert p {
-    font-size: 20px;
-    margin-top: 10%;
-    text-align: center;
-    color: rgb(135, 96, 79);
-  }
-
-  .alert p:nth-child(2) {
-    height: 50px;
-    line-height: 50px;
-    width: 80%;
-    border-radius: 10px;
-    color: #fff;
-    background: rgb(135, 96, 79);
-    margin: 20% 10% 0 10%;
-  }
-
-  .carpay {
-    margin: 0;
-    padding: 0;
     width: 100%;
     height: 100%;
-    background: rgb(255, 244, 238);
+    line-height: 5rem;
+    text-align: center;
+    color: #fff;
+    font-size: 1.8rem;
+  }
+
+  .main {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: whitesmoke;
+  }
+
+  .car {
+
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    width: 20rem;
+    height: 10rem;
+    background: url("../assets/caricon.png") no-repeat center / 20rem;
+    overflow: visible;
+  }
+
+  .inputitem {
+    height: 4rem;
+    width: 90%;
+    background-color: white;
+    display: flex;
+    display: -webkit-flex;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+
+  .chunk {
+    border: 1px solid #979797;
+    border-left: 0px;
+    height: 100%;
+    width: 50px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    text-align: center;
+    color: black;
+    line-height: 4rem;
+    font-size: 1.8rem;
+    font-family: "Microsoft Yahei", "Arial", "Helvetica";
+  }
+
+  .chunk:first-child {
+
+    border: 1px solid #979797;
+  }
+
+  .noe:nth-child(1) {
+    background-color: #A17D71;
+  }
+
+  .bluecolor {
+    background-color: #A17D71;
+    color: white;
+  }
+
+  .deepgreencolor {
+
+    background-color: #7ed321;
+    color: white;
+  }
+
+  .greencolor {
+    background-color: #B8E986;
+    color: #fff;
+  }
+
+  .tip {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem auto;
+    width: 90%;
+    font-size: 1.2rem;
+    color: #b8c2c7;
+    height: 20px;
+  }
+
+  input[type=checkbox] {
+
+    display: none;
+  }
+
+  label {
+
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    margin-right: 1rem;
+    border: 1px solid grey;
+    box-sizing: border-box;
+    vertical-align: middle;
+  }
+
+  label::before {
+
+    content: '';
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+
+    margin-right: 1rem;
+  }
+
+  input:checked + label::before {
+
+    border: 2px solid #7ed321;
+    border-top: none;
+    border-right: none;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    width: 10px;
+    height: 5px;
+    top: 5px;
+    left: 5px;
     position: absolute;
   }
-  .logo {
-    display: inline-block;
-    margin-left: 20%;
-    margin-top: 20px;
+
+  .checkbox {
+
+    position: relative;
+    color: #2D2F3B;
+    font-size: 1.4rem;
   }
 
-  section {
-    padding-top: 50px;
-  }
+  .btn {
 
-  section .section {
-    margin: 0px auto 0 auto;
-    width: 90%;
-    height: 45%;
-    background: rgb(161, 125, 113);
-    border-radius: 10px;
-  }
-
-  .section nav ul {
-    display: flex;
-    background: rgb(135, 96, 79);
-    height: 60px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-  }
-
-  p input {
-    border: none;
-    background: rgb(161, 125, 113);
-    height: 30px;
-    outline: none;
-    color: rgb(135, 96, 79);
-    font-size: 20px;
-    width: 40%;
-  }
-
-  .section nav ul li {
-    width: 50%;
-    color: #FFF;
-    line-height: 60px;
-    text-align: center;
-    font-size: 16px;
-  }
-
-  .section nav ul li:nth-child(1) {
-    border-top-left-radius: 10px;
-  }
-
-  .section nav ul li:last-child {
-    border-top-right-radius: 10px;
-  }
-
-  .section p {
-    font-size: 20px;
-    color: #fff;
-    margin: 10% 0 10% 4%;
-  }
-
-  .section .listi {
-    display: flex;
-    justify-content: space-around;
-    padding: 0 3% 15% 3%;
-  }
-
-  .section .listi input {
-    display: inline-block;
-    width: 100%;
-    height: 32px;
-    border: none;
-    text-align: center;
-    line-height: 30px;
-    outline: none;
-    margin: auto;
-    font-size: 20px;
-  }
-  .active {
-    background: rgb(161, 125, 113);
-
-  }
-  .active li:last-child {
-    border-top-left-radius: 10px;
-  }
-
-  .section .listi li {
-    width: 11%;
-    height: 35px;
-    line-height: 35px;
-    text-align: center;
-    background: #fff;
-    border-radius: 2px;
-    background: rgb(161, 125, 113);
-  }
-
-  .section img {
-    display: inline-block;
-    height: 40%;
-    width: 80%;
-  }
-
-  .btn ul {
-    display: flex;
-    margin-top: 50px;
-    justify-content: space-around;
-  }
-
-  .btn ul li {
-    height: 50px;
-    width: 90%;
-    background: rgb(161, 125, 113);
-    color: #fff;
-    line-height: 50px;
-    text-align: center;
+    width: 86%;
+    height: 4rem;
+    margin-top: 0.5rem;
     border-radius: 5px;
-    font-size: 20px;
+    text-align: center;
+    line-height: 4rem;
+    font-size: 1.4rem;
+  }
+
+  .enable {
+
+    background-color: #A17D71;
+    color: white;
+    font-size: 1.4rem;
+  }
+
+  .disable {
+
+    /*background-color: gray;*/
+    color: #b8c2c7;
+    font-size: 1.8rem;
+    border: 1px solid #d8d8d8;
+  }
+
+  img {
+    margin-top: 16.9rem;
+    display: inline-block;
+    width: 11rem;
+    height: 6.9rem;
   }
 
 </style>
+

@@ -21,23 +21,23 @@
 </template>
 
 <script>
-  import { WxManager} from "../wxPay";
-
   export default {
     name: 'pay',
     data() {
       return {
         callbackUrl: window.callbackUrl,
-        carNo: localStorage.getItem('carNo'),
+        merchantCode: window.merchantCode,
+        parkCode: window.parkCode,
+        jparkingURL: window.jparkingURL,
+        payUrl: window.payUrl,
+        carNo: sessionStorage.getItem('carNo'),
         endTime: this.$route.query.endTime,
         startTime: this.$route.query.startTime,
-        days: '',
-        hours: '',
-        minutes: '',
+        days: '',hours: '', minutes: '',
         totalFee: this.$route.query.totalFee,
         orderNo: this.$route.query.orderNo,
         openId: this.$route.query.openId,
-        payData:'',
+        payData: '',
       }
     },
     created() {
@@ -45,29 +45,21 @@
     },
     methods: {
       dopay: function () {
-        let carinfo = {
-          'orderNo': this.orderNo,
-          'appType': 'SERVICE',
-          'payType': 'JSAPI',
-          'channelId': 'WX',
-          'openId': this.openId,
-          'callbackUrl':this.callbackUrl
+
+        let p = {
+          "channelId": "WX",
+          "orderNo": this.orderNo,
+          "appType": "SERVICE",
+          "callbackUrl": this.callbackUrl,
+          "openId": this.openId,
+          "reqSource": "WX_JTC",
+          "jparkingURL": this.jparkingURL,
+          "grayKey": this.merchantCode + ',' + this.parkCode + ',' + this.sub,
+          "couponNo": ""   //全网优惠券编号
         }
-        let url = 'https://ceshicloud-of.jslife.net/jparking-service/pay/prepay'
-        this.$axios.post(url, carinfo).then(res => {
-          let packagename = JSON.parse(JSON.parse(res.data.attributes.payPara).payPara).package
-        let {  appId, timeStamp, nonceStr,  signType, paySign } =
-          JSON.parse(JSON.parse(res.data.attributes.payPara).payPara)
-           WxManager.pay(appId, timeStamp, nonceStr, packagename, signType, paySign, ()=>{
 
-           }, ()=>{
-
-           })
-
-        }).catch(error => {
-
-          console.log(error)
-        })
+        let url = this.payUrl + '=' + JSON.stringify(p)
+          window.location.href = url
       }
     },
     computed: {
@@ -75,13 +67,16 @@
         let end = this.endTime.replace(/-/g, '/'), start = this.startTime.replace(/-/g, '/')
         let endTimes = new Date(end).getTime(), srartTimes = new Date(start).getTime()
         let duration = endTimes - srartTimes
-        let dsy =parseInt(duration / (3600000 * 24))//1000*60*60 天
-        let minute=parseInt((duration % (3600000)) / (60000 ))//1000*60 分
-        let hour=parseInt((duration % (3600000 * 24)) / ( 3600000)) //小时
-        let days =(dsy > 0 ? dsy +'天' : '');
-        let hours =(hour > 0 ? hour+'小时' : '' );
-        let minutes = (minute > 0 ? minute +'分钟' : '');
+        let dsy = parseInt(duration / (3600000 * 24))//1000*60*60 天
+        let minute = parseInt((duration % (3600000)) / (60000))//1000*60 分
+        let hour = parseInt((duration % (3600000 * 24)) / (3600000)) //小时
+        let days = (dsy > 0 ? dsy + '天' : '');
+        let hours = (hour > 0 ? hour + '小时' : '');
+        let minutes = (minute > 0 ? minute + '分钟' : '');
         return this.days = days , this.hours = hours, this.minutes = minutes
+      },
+      sub: function () {
+        return encodeURI(this.carNo.substring(0, 1)) + '-' + this.carNo.substring(1)
       }
     }
   }
