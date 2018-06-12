@@ -11,7 +11,7 @@
         <label for="checkbox1"></label>新能源车
       </div>
     </div>
-    <div v-bind:class="btnstyle" v-on:click="doquery">查询车辆</div>
+    <button v-bind:class="btnstyle" :disabled="disabled" v-on:click="doquery">查询车辆</button>
     <carnokeyboard v-on:select="selectletter" v-on:delete="deleteletter" v-show="begininput"
                    v-bind:inputtype="inputtype"></carnokeyboard>
 
@@ -29,11 +29,13 @@
 <script>
 
   import Carnokeyboard from "./keyboard.vue";
+
   export default {
     components: {Carnokeyboard},
     name: 'querycar',
-    data: function () {
+    data() {
       return {
+
         carno: '',
         enable: false,
         begininput: false,//键盘
@@ -46,205 +48,251 @@
         logo: require('../assets/LOGO.png'),
         show: false,
         alert: '',
+        disabled: true,
+
+        formData: {
+          phone: '',
+          code: '',
+        },
+        show: true,
+        count: '',
+        timer: null,
       }
     },
-    created() {
 
-    },
+  created()
+  {
+    if (this.count.length == 7) {
+      this.disabled = false
 
-    watch: {
-      carno: function (newvalue) {
+    }
 
-        this.enable = newvalue.length > 4
-      },
-      newresourcecar: function (newvalue) {
+  }
+  ,
 
-        this.count = this.newresourcecar ? 8 : 7
+  watch: {
+    carno: function (newvalue) {
+
+      this.enable = newvalue.length > 6
+    }
+  ,
+    newresourcecar: function (newvalue) {
+
+      this.count = this.newresourcecar ? 8 : 7
+    }
+
+  }
+  ,
+  computed: {
+
+    inputtype: function () {
+
+      if (this.inputindex == 0) {
+
+        return 0
       }
-    },
-    computed: {
 
-      inputtype: function () {
+      if (this.inputindex == 1) {
 
-        if (this.inputindex == 0) {
+        return 1
+      }
 
-          return 0
+      if (this.inputindex == 6) {
+
+        return 3
+      }
+
+      return 2
+    }
+  ,
+    btnstyle: function () {
+
+      if (this.enable) {
+
+        return 'btn enable'
+      }
+
+      return 'btn disable'
+    }
+  ,
+  }
+  ,
+
+  methods: {
+
+    //截取
+    getQueryVariable: function (variable) {
+      var query = window.location.search.substring(1);
+      var vars = query.split("&");
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == variable) {
+          return pair[1];
         }
-
-        if (this.inputindex == 1) {
-
-          return 1
-        }
-
-        if (this.inputindex == 6) {
-
-          return 3
-        }
-
-        return 2
-      },
-      btnstyle: function () {
-
-        if (this.enable) {
-
-          return 'btn enable'
-        }
-
-        return 'btn disable'
-      },
-    },
-
-    methods: {
-
-      //截取
-      getQueryVariable: function (variable) {
-        var query = window.location.search.substring(1);
-        var vars = query.split("&");
-        for (var i = 0; i < vars.length; i++) {
-          var pair = vars[i].split("=");
-          if (pair[0] == variable) {
-            return pair[1];
-          }
-        }
-        return (false);
-      },
+      }
+      return (false);
+    }
+  ,
 
 
-      getLetter: function (index) {
+    getLetter: function (index) {
 
-        if (index >= this.carno.length) {
+      if (index >= this.carno.length) {
 
-          return ''
-        }
+        return ''
+      }
 
-        return this.carno[index]
-      },
-      doquery: function () {
+      return this.carno[index]
+    }
+  ,
+    doquery: function () {
 
-
-
-        let value = document.getElementsByClassName('chunk')
+      let value = document.getElementsByClassName('chunk')
+      if (this.count == 7) {
         for (var i = 0; i < value.length; i++) {
           this.carNo += value[i].innerHTML
         }
-        sessionStorage.setItem('carNo', this.carNo)
-
-        let id = this.getQueryVariable('clientId')
-        let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
-        var carpay = {
-          'parkCode': this.parkCode,
-          'carNo': this.carNo,
-          'orderType': 'VNP'
-        }
-        this.$axios.post(url, carpay).then(res => {
-          if (res.data.resultCode == 0) {
-            if (res.data.dataItems[0].attributes.retcode == '0') {
-              let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
-              this.$router.push({
-                path: 'pay',
-                query: {
-                  openId: id,
-                  endTime: endTime,
-                  startTime: startTime,
-                  totalFee: totalFee,
-                  orderNo: orderNo
-                }
-              })
-            } else {
-              this.show=true
-              this.alert=res.data.dataItems[0].attributes.retmsg
-              setTimeout(()=>{
-                this.show=false
-                this.carNo=''
-              },1000)
-              return
-            }
-          } else {
-            this.show=true
-            this.alert='系统异常'
-            setTimeout(()=>{
-              this.show=false
-              this.carNo=''
-            },1000)
-            return
-          }
-        })
-      },
-
-      doinput: function () {
-
-        if (this.begininput) {
-
-          return
-        }
-        this.carno = ''
-
-        this.begininput = true
-
-        this.inputindex = 0
+        sessionStorage.setItem('carNo', this.carNo.substring(0, 7))
+        // alert(this.carNo)
       }
-      ,
-      deleteletter: function () {
 
-        this.inputindex = Math.max(0, this.inputindex - 1)
-
-        this.carno = this.carno.substr(0, this.inputindex)
-      }
-      ,
-      selectletter: function (value) {
-
-        this.carno = this.carno + value
-
-        this.inputindex += 1
-      }
-      ,
-      getchunkstyle: function (index) {
-
-        if (!this.newresourcecar) {
-
-          if (index == 0 && this.carno.length >= 1) {
-
-            return 'chunk bluecolor'
-          }
-
-          return 'chunk noe'
-        }
-        else {
-
-          if (index == 0 && this.carno.length >= 1) {
-
-            return 'chunk deepgreencolor'
-          }
-
-          return 'chunk greencolor'
-        }
-      },
-    },
-
-    updated: function () {
-      if (this.count == 7) {
-
-        let close = document.getElementsByClassName('chunk')[6].innerText
-
-        if (close != '') {
-
-          this.begininput = false
-        }
-
-      }
       if (this.count == 8) {
-
-        let closeT = document.getElementsByClassName('chunk')[7].innerText
-
-        if (closeT != '') {
-
-          this.begininput = false
-
+        for (var i = 0; i < value.length; i++) {
+          this.carNo += value[i].innerHTML
         }
+        sessionStorage.setItem('carNo', this.carNo.substring(0, 8))
+      }
+
+      let id = this.getQueryVariable('clientId')
+      let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
+      var carpay = {
+        'parkCode': this.parkCode,
+        'carNo': this.carNo,
+        'orderType': 'VNP'
+      }
+      this.$axios.post(url, carpay).then(res => {
+        if (res.data.resultCode == 0) {
+          if (res.data.dataItems[0].attributes.retcode == '0') {
+            let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
+            this.$router.push({
+              path: 'pay',
+              query: {
+                openId: id,
+                endTime: endTime,
+                startTime: startTime,
+                totalFee: totalFee,
+                orderNo: orderNo
+              }
+            })
+          } else {
+            this.alert = res.data.dataItems[0].attributes.retmsg
+            this.show = true
+            setTimeout(() => {
+              this.show = false
+              this.carNo = ''
+            }, 1000)
+          }
+        } else if (res.data.resultCode == 1) {
+          this.alert = '系统错误'
+          this.show = true
+          setTimeout(() => {
+            this.show = false
+            this.carNo = ''
+          }, 1000)
+        }
+      })
+    }
+  ,
+
+    doinput: function () {
+
+      if (this.begininput) {
+
+        return
+      }
+      this.carno = ''
+
+      this.begininput = true
+
+      this.inputindex = 0
+    }
+  ,
+    deleteletter: function () {
+
+      this.inputindex = Math.max(0, this.inputindex - 1)
+
+      this.carno = this.carno.substr(0, this.inputindex)
+    }
+  ,
+    selectletter: function (value) {
+
+      this.carno = this.carno + value
+
+      this.inputindex += 1
+    }
+  ,
+    getchunkstyle: function (index) {
+
+      if (!this.newresourcecar) {
+
+        if (index == 0 && this.carno.length >= 1) {
+
+          return 'chunk bluecolor'
+        }
+
+        return 'chunk noe'
+      }
+      else {
+
+        if (index == 0 && this.carno.length >= 1) {
+
+          return 'chunk deepgreencolor'
+        }
+
+        return 'chunk greencolor'
+      }
+    }
+  ,
+    getCode(formData)
+    {
+      if (!this.timer) {
+        this.count = TIME_COUNT;
+        this.show = false;
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= TIME_COUNT) {
+            this.count--;
+          } else {
+            this.show = true;
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        }, 1000)
+      }
+    }
+  }
+  ,
+
+  updated: function () {
+    if (this.count == 7) {
+      let close = document.getElementsByClassName('chunk')[6].innerText
+      if (close != '') {
+        // this.begininput = false
+        this.disabled = false
+      }
+    }
+    if (this.count == 8) {
+
+      let closeT = document.getElementsByClassName('chunk')[7].innerText
+
+      if (closeT != '') {
+
+        // this.begininput = false
+        this.disabled = false
 
       }
 
     }
+  }
 
 
   }
@@ -255,7 +303,7 @@
 
   .alert {
     position: absolute;
-    margin: 65%  auto;
+    margin: 65% auto;
     height: 5rem;
     width: 25rem;
     background: rgba(45, 47, 59, 0.50);
@@ -430,6 +478,11 @@
     display: inline-block;
     width: 11rem;
     height: 6.9rem;
+  }
+
+  button {
+    background: whitesmoke;
+    outline: none;
   }
 
 </style>

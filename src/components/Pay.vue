@@ -45,7 +45,7 @@
     },
     methods: {
       dopay: function () {
-
+      sessionStorage.setItem('fee',this.totalFee)
         let p = {
           "channelId": "WX",
           "orderNo": this.orderNo,
@@ -58,6 +58,7 @@
           "couponNo": ""   //全网优惠券编号
         }
 
+        this.$router.push({path:'paysuccess'})
         let url = this.payUrl + '=' + JSON.stringify(p)
           window.location.href = url
       }

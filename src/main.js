@@ -10,6 +10,7 @@ import qs from 'qs'
 import carpay from './components/CarPay'
 import open from './components/Open'
 import pay from './components/Pay'
+import paysuccess  from  './components/paysuccess'
 
 Vue.prototype.$axios = Axios;
 Vue.use(VueRouter)
@@ -40,7 +41,8 @@ const router = new VueRouter({
   routes: [
     {path: '/open', component: open},
     {path: '/', component: carpay},
-    {path: '/pay', component: pay}
+    {path: '/pay', component: pay},
+    {path:'/paysuccess',component:paysuccess}
   ]
 
 })

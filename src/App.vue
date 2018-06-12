@@ -8,11 +8,12 @@
 
 import  CarPay from './components/CarPay'
 import  open  from './components/Open'
+import  paysuccess from './components/paysuccess'
 
 export default {
   name: 'App',
   components: {
-    CarPay,open
+    CarPay,open,paysuccess
   }
 }
 </script>
