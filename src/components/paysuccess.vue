@@ -3,7 +3,7 @@
     <div class="payinfo">
       <img class="cashicon" src="../assets/paysuccesscash.png"/>
       <div class="msg">
-        <div class="success">支付成功!</div>
+        <div class="success">{{ status }}</div>
         <div class="tip">感谢您使用，祝您旅途愉快</div>
       </div>
     </div>
@@ -14,7 +14,7 @@
     </div>
 
     <div class="time">
-      <p>免费离场时间：<span id="span">{{ mm }}分{{ ss}}秒</span></p>
+      <p>免费离场时间：<span id="span">{{ mm }}分{{ ss }}秒</span></p>
       <button @click="eInvoice">开电子发票</button>
     </div>
   </div>
@@ -25,32 +25,51 @@
     name: 'paysuccess',
     data() {
       return {
+        status:'支付成功!',
         fee: sessionStorage.getItem('fee'),
         mm: 19,
         ss: 59
       }
     },
     created() {
+      let url = 'https://ceshicloud-of.jslife.net/jspsn/XmppServer.servlet?ver=' + new Date().getTime()
+      let orderNo = this.$route.query.orderNo
+      console.log(this.$route.query)
+      this.$axios.post(url,{
+        serviceId: "ac.pay.querypayresult",
+        attributes:{"orderNo":orderNo}
+      }).then(res =>{
+        alert(res.data)
+      }).catch( error =>{
+        alert(error)
+      })
 
-      alert(this.$route.query)
-      window.setInterval(() => {
-        if (this.ss != 1) {
-          this.ss--
-        } else {
-          if (this.mm == 0 && this.ss == 1) {
-              document.getElementById('span').innerText = '已过期 '
-          } else {
-            this.mm -= 1
-            this.ss = 59
-          }
-        }
+      this.setTime()
 
-      }, 1000)
+      //alert(this.$route.query.orderNo)
+
     },
-    methods:{
-      eInvoice(){
-        window.location.href='https://weixin.jslife.com.cn/jtc-front/dist/eInvoice.html?key=880075565130008'
-      }
+    methods: {
+      eInvoice() {
+        window.location.href = 'https://weixin.jslife.com.cn/jtc-front/dist/eInvoice.html?key=880075565130008'
+      },
+      setTime() {
+        window.setInterval(() => {
+          if (this.ss != 1) {
+            this.ss--
+          } else {
+            if (this.mm == 0 && this.ss == 1) {
+              document.getElementById('span').innerText = '已过期 '
+            } else {
+              this.mm -= 1
+              this.ss = 59
+            }
+          }
+
+        }, 1000)
+      },
+
+
     }
 
   }
@@ -127,9 +146,10 @@
     font-size: 1.2rem;
     color: white;
   }
-  .paymoney{
 
-    bordrt:1px solid red;
+  .paymoney {
+
+    bordrt: 1px solid red;
     background: url("../assets/paysuccessbg.png") no-repeat center/21.5rem 4.3rem;
     width: 70%;
     overflow: visible;
