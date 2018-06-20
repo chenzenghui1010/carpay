@@ -37,7 +37,7 @@ Vue.config.productionTip = false
 
 const router = new VueRouter({
   mode:'history',
-  base:'/carpay',
+  base:'/zslihe/carpay',
   routes: [
     {path: '/open', component: open},
     {path: '/', component: carpay},

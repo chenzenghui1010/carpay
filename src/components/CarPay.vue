@@ -167,7 +167,9 @@
           sessionStorage.setItem('carNo', this.carNo.substring(0, 8))
         }
 
-        let id = this.getQueryVariable('clientId')
+        let id=this.$route.query.clientId
+
+          //this.getQueryVariable('clientId')
         let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
         var carpay = {
           'parkCode': this.parkCode,

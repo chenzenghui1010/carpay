@@ -4,16 +4,16 @@
       <img class="cashicon" src="../assets/paysuccesscash.png"/>
       <div class="msg">
         <div class="success">{{ status }}</div>
-        <div class="tip">感谢您使用，祝您旅途愉快</div>
+        <div class="tip">{{ list }}</div>
       </div>
     </div>
-    <div class="paymoney"> 微信支付 ¥ {{ fee }}</div>
-    <div class="payyes"></div>
+    <div v-if="btn" class="paymoney"> 微信支付 ¥ {{ fee }}</div>
+    <div v-if="btn" class="payyes"></div>
     <div class="logo">
       <img class="logoimg" src="../assets/LOGO.png" alt="">
     </div>
 
-    <div class="time">
+    <div v-if="btn" class="time">
       <p>免费离场时间：<span id="span">{{ mm }}分{{ ss }}秒</span></p>
       <button @click="eInvoice">开电子发票</button>
     </div>
@@ -25,28 +25,35 @@
     name: 'paysuccess',
     data() {
       return {
-        status:'支付成功!',
-        fee: sessionStorage.getItem('fee'),
+        dataList: {},
+        status: '',
+        list: '',
+        fee: '',
+        btn: true,
         mm: 19,
         ss: 59
       }
     },
     created() {
-      let url = 'https://ceshicloud-of.jslife.net/jspsn/XmppServer.servlet?ver=' + new Date().getTime()
       let orderNo = this.$route.query.orderNo
-      console.log(this.$route.query)
-      this.$axios.post(url,{
-        serviceId: "ac.pay.querypayresult",
-        attributes:{"orderNo":orderNo}
-      }).then(res =>{
-        alert(res.data)
-      }).catch( error =>{
-        alert(error)
+      let url = '/jspsn/XmppServer.servlet?ver=' + new Date().getTime() + '&serviceId=ac.pay.querypayresult&attributes={"orderNo":"' + orderNo + '"}'
+      let resurl = this.$route.query.resurl
+      this.$axios.post(url, {}).then(res => {
+        this.dataList = res.data.attributes
+        if (this.dataList.tradeStatus == '0') {
+          this.fee = this.dataList.totalFee
+          this.status = '支付成功!'
+         c
+        } else {
+          this.btn = false
+          this.status = '支付失败!'
+          this.left = '支付失败，请重新支付'
+        }
+      }).catch(error => {
+        console.log(error)
       })
 
       this.setTime()
-
-      //alert(this.$route.query.orderNo)
 
     },
     methods: {
