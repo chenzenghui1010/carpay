@@ -16,21 +16,20 @@ Vue.prototype.$axios = Axios;
 Vue.use(VueRouter)
 
 
-
 //请求拦截器
-Axios.interceptors.request.use(function (config) {
-
-  return config;
-}, function (error) {
-  return Promise.reject(error);
-});
-
-//响应拦截器
-Axios.interceptors.response.use(function (response) {
-  return response;
-}, function (error) {
-  return Promise.reject(error);
-});
+// Axios.interceptors.request.use(function (config) {
+//
+//   return config;
+// }, function (error) {
+//   return Promise.reject(error);
+// });
+//
+// //响应拦截器
+// Axios.interceptors.response.use(function (response) {
+//   return response;
+// }, function (error) {
+//   return Promise.reject(error);
+// });
 
 
 Vue.config.productionTip = false

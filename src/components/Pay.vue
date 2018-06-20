@@ -1,9 +1,9 @@
 <template>
   <div class="pay">
     <div class="header">
-      <div class="title">确 定 缴 费</div>
+      <div class="title">利和广场停车场</div>
       <div class="feeinfo">
-        <div class="feetitle">停车费</div>
+        <div class="feetitle">应付费用</div>
         <div style="padding-right: 1rem">
           <label class="fee">{{ totalFee }}</label><label class="rmb">¥</label>
         </div>
@@ -11,7 +11,7 @@
       <div class="section">
         <p><span>车牌号码</span><span>{{  carNo }}</span></p>
         <p><span>入场时间</span><span>{{ startTime }}</span></p>
-        <p><span>离场时间</span><span>{{ endTime }}</span></p>
+        <!--<p><span>离场时间</span><span>{{ endTime }}</span></p>-->
         <p><span>停留时长</span><span>{{days }}{{hours}}{{ minutes}}</span></p>
         <p><span>支付方式</span><span class="wx">微信支付</span></p>
       </div>
@@ -41,7 +41,9 @@
       }
     },
     created() {
+     document.getElementById('title').innerText = '车牌支付'
       this.time
+
     },
     methods: {
       dopay: function () {
@@ -124,7 +126,7 @@
     background-color: #f6f6f6;
     width: 100%;
     display: flex;
-    height: 13.5rem;
+    height: 10.5rem;
     justify-content: space-between;
     align-items: center;
   }
@@ -135,7 +137,7 @@
     padding-top: 2.5rem;
     align-self: flex-start;
     padding-left: 0.8rem;
-    color: #2d2f3b;
+    color: #ff473d;
   }
 
   .fee {
@@ -178,7 +180,7 @@
   .rmb {
     font-size: 3.2rem;
     color: #ff473d;
-    font-weight: bold;
+    /*font-weight: bold;*/
   }
 
   .btn {

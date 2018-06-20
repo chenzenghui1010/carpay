@@ -12,6 +12,11 @@
     <div class="logo">
       <img class="logoimg" src="../assets/LOGO.png" alt="">
     </div>
+
+    <div class="time">
+      <p>免费离场时间：<span id="span">{{ mm }}分{{ ss}}秒</span></p>
+      <button @click="eInvoice">开电子发票</button>
+    </div>
   </div>
 </template>
 
@@ -19,7 +24,33 @@
   export default {
     name: 'paysuccess',
     data() {
-      return {fee: sessionStorage.getItem('fee')}
+      return {
+        fee: sessionStorage.getItem('fee'),
+        mm: 19,
+        ss: 59
+      }
+    },
+    created() {
+
+      alert(this.$route.query)
+      window.setInterval(() => {
+        if (this.ss != 1) {
+          this.ss--
+        } else {
+          if (this.mm == 0 && this.ss == 1) {
+              document.getElementById('span').innerText = '已过期 '
+          } else {
+            this.mm -= 1
+            this.ss = 59
+          }
+        }
+
+      }, 1000)
+    },
+    methods:{
+      eInvoice(){
+        window.location.href='https://weixin.jslife.com.cn/jtc-front/dist/eInvoice.html?key=880075565130008'
+      }
     }
 
   }
@@ -32,6 +63,35 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+  }
+
+  .time {
+    width: 100%;
+    height: 50px;
+    margin: 85% 0%;
+    position: absolute;
+    text-align: center;
+  }
+
+  .time p {
+    font-size: 2rem;
+    color: #2D2F3B;
+  }
+
+  .time p span {
+    font-size: 2.1rem;
+    color: #7ed321;
+  }
+
+  button {
+    width: 80%;
+    height: 4.5rem;
+    background: none;
+    border: 1px solid #A17D71;
+    border-radius: 5px;
+    color: #A17D71;
+    font-size: 2rem;
+    margin-top: 10%;
   }
 
   .payinfo {
@@ -67,11 +127,11 @@
     font-size: 1.2rem;
     color: white;
   }
+  .paymoney{
 
-  .paymoney {
-
+    bordrt:1px solid red;
     background: url("../assets/paysuccessbg.png") no-repeat center/21.5rem 4.3rem;
-    width: 60%;
+    width: 70%;
     overflow: visible;
     height: 4.3rem;
     line-height: 4.3rem;
@@ -102,7 +162,7 @@
   .logoimg {
 
     display: inline-block;
-    margin-top: 110%;
+    margin-top: 130%;
     width: 11rem;
     height: 6.9rem;
     background: #fff;
