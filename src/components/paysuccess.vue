@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div class="payinfo">
+    <div :class=" btn ? 'payinfo':'fail' ">
       <img class="cashicon" src="../assets/paysuccesscash.png"/>
       <div class="msg">
         <div class="success" v-text="status"></div>
@@ -8,7 +8,8 @@
       </div>
     </div>
     <div v-if="btn" class="paymoney"> 微信支付 ¥ {{ fee }}</div>
-    <div v-if="btn" class="payyes"></div>
+    <div v-if="btn" :class=" btn ? 'payyes':'statusimg' "></div>
+    <div  v-if=" !btn" :class=" btn ? 'payyes':'failimg' "></div>
     <div class="logo">
       <img class="logoimg" src="../assets/LOGO.png" alt="">
     </div>
@@ -46,16 +47,14 @@
           this.list = '感谢您是使用，祝你旅途愉快!'
           this.btn = true
         } else {
-
           this.status = '支付失败!'
           this.list = '支付失败，请重新支付'
-
         }
       }).catch(error => {
         console.log(error)
       })
 
-      this.setTime()
+      // this.setTime()
 
     },
     methods: {
@@ -91,6 +90,14 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+  }
+
+  .fail {
+    margin: 8rem auto 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .time {
@@ -158,7 +165,6 @@
 
   .paymoney {
 
-    bordrt: 1px solid red;
     background: url("../assets/paysuccessbg.png") no-repeat center/21.5rem 4.3rem;
     width: 70%;
     overflow: visible;
@@ -179,6 +185,16 @@
     position: relative;
     top: 4.5rem;
     align-self: center;
+  }
+
+  .failimg {
+    background: url("../assets/fail.png") no-repeat center/ 9rem;
+    overflow-clip: visible;
+    width: 9rem;
+    height: 9rem;
+    position: relative;
+    top: 4.5rem;
+    align-self: center
   }
 
   .logo {
