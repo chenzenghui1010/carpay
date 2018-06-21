@@ -1,5 +1,5 @@
 window.openUrl='https://ceshicloud-of.jslife.net/jpark-code-front/wx/getOpenIdForRedirect'
-window.redirectUrl='http://zwvisit.indoorun.com/zslihe/carpay.html'
+window.redirectUrl='http://zwvisit.indoorun.com/zslihe/carpay/carpay.html'
 window.parkCode= 'jsds20170314'
 window.callbackUrl='http://zwvisit.indoorun.com/zslihe/carpay/paysuccess.html'
   //'http://zwvisit.indoorun.com/zslihe/carpay/#/paysuccess'
