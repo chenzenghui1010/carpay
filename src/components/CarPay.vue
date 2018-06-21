@@ -64,11 +64,6 @@
     },
 
     created() {
-      let  url=window.location.href;
-      let str="#/open"
-      if(url.indexOf(str)>=0){
-        window.location.href=window.openUrl+'?reqSource=WX_JTC&codeType=base&redirectUrl='+window.redirectUrl;
-      }
 
       document.title = '停车缴费'
 
