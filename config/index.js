@@ -53,7 +53,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../carpay'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: 'http://123.206.230.152/carpay/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps
