@@ -168,16 +168,7 @@
           if (res.data.resultCode == 0) {
             if (res.data.dataItems[0].attributes.retcode == '0') {
               let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
-              this.$router.push({
-                path: 'pay',
-                query: {
-                  openId: id,
-                  endTime: endTime,
-                  startTime: startTime,
-                  totalFee: totalFee,
-                  orderNo: orderNo
-                }
-              })
+              window.location.href = './pay.html?openId=' + id + '&endTime=' + endTime + '&startTime=' + startTime + '&totalFee=' + totalFee + '&orderNo=' + orderNo
             } else {
               this.alert = res.data.dataItems[0].attributes.retmsg
               this.show = true
