@@ -12,7 +12,7 @@
         <p><span>车牌号码</span><span>{{  carNo }}</span></p>
         <p><span>入场时间</span><span>{{ startTime }}</span></p>
         <!--<p><span>离场时间</span><span>{{ endTime }}</span></p>-->
-        <p><span>停留时长</span><span>{{days }}{{hours}}{{ minutes}}</span></p>
+        <p><span>停留时长</span><span>{{ time }}</span></p>
         <p><span>支付方式</span><span class="wx">微信支付</span></p>
       </div>
       <div class="btn" @click="dopay">立即缴费</div>
@@ -69,7 +69,7 @@
           "couponNo": ""   //全网优惠券编号
         }
 
-        this.$router.push({path:'paysuccess'})
+        // this.$router.push({path:'paysuccess'})
         let url = this.payUrl + '=' + JSON.stringify(p)
           window.location.href = url
       }
@@ -85,8 +85,10 @@
         let days = (dsy > 0 ? dsy + '天' : '');
         let hours = (hour > 0 ? hour + '小时' : '');
         let minutes = (minute > 0 ? minute + '分钟' : '');
-        return this.days = days , this.hours = hours, this.minutes = minutes
-      },
+        return days+hours+minutes
+       // return days ,hours,minutes
+       },
+
       sub: function () {
         return encodeURI(this.carNo.substring(0, 1)) + '-' + this.carNo.substring(1)
       }
