@@ -69,7 +69,6 @@
 
       if (this.count.length == 7) {
         this.disabled = false
-
       }
 
     }
@@ -125,20 +124,6 @@
 
     methods: {
 
-      //截取
-      getQueryVariable: function (variable) {
-        var query = window.location.search.substring(1);
-        var vars = query.split("&");
-        for (var i = 0; i < vars.length; i++) {
-          var pair = vars[i].split("=");
-          if (pair[0] == variable) {
-            return pair[1];
-          }
-        }
-        return (false);
-      }
-      ,
-
 
       getLetter: function (index) {
 
@@ -158,7 +143,7 @@
             this.carNo += value[i].innerHTML
           }
           sessionStorage.setItem('carNo', this.carNo.substring(0, 7))
-          // alert(this.carNo)
+
         }
 
         if (this.count == 8) {
@@ -170,7 +155,7 @@
 
         let id=this.$route.query.clientId
 
-          //this.getQueryVariable('clientId')
+
         let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
         var carpay = {
           'parkCode': this.parkCode,
@@ -308,7 +293,7 @@
 
   .vip {
     width: 90%;
-    /*border: 1px solid red;*/
+
     color: #b8c2c7;
 
   }
