@@ -33,6 +33,7 @@
 
 <script>
 
+  import {getQueryString} from "../utils/globalhelper";
   import Carnokeyboard from "./keyboard.vue";
 
   export default {
@@ -153,7 +154,8 @@
           sessionStorage.setItem('carNo', this.carNo.substring(0, 8))
         }
 
-        let id=this.$route.query.clientId
+
+        let id = getQueryString('clientId')
 
 
         let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
