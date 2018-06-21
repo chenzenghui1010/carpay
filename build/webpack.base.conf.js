@@ -13,7 +13,8 @@ module.exports = {
   entry: {
     pay: './src/pay.js',
     carpay: './src/carpay.js',
-    paysuccess: './src/paysuccess.js'
+    paysuccess: './src/paysuccess.js',
+    index: './src/main.js',
   },
   output: {
     path: config.build.assetsRoot,

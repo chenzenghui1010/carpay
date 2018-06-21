@@ -70,6 +70,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       inject: true,
       chunks:['carpay', 'vendor', 'manifest']
     }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'index.html',
+      inject: true,
+      chunks:['index', 'vendor', 'manifest']
+    }),
     // copy custom static assets
     new CopyWebpackPlugin([
       {

@@ -46,6 +46,7 @@ module.exports = {
 
   build: {
     // Template for index.html
+    index: path.resolve(__dirname, '../carpay/index.html'),
     carpay: path.resolve(__dirname, '../carpay/carpay.html'),
     pay: path.resolve(__dirname, '../carpay/pay.html'),
     paysuccess: path.resolve(__dirname, '../carpay/paysuccess.html'),
