@@ -62,7 +62,6 @@
 
         this.$router.push({path:'paysuccess'})
         let url = this.payUrl + '=' + JSON.stringify(p)
-        alert(url)
           window.location.href = url
       }
     },

@@ -3,8 +3,8 @@
     <div class="payinfo">
       <img class="cashicon" src="../assets/paysuccesscash.png"/>
       <div class="msg">
-        <div class="success">{{ status }}</div>
-        <div class="tip">{{ list }}</div>
+        <div class="success" v-text="status"></div>
+        <div class="tip" v-text="list"></div>
       </div>
     </div>
     <div v-if="btn" class="paymoney"> 微信支付 ¥ {{ fee }}</div>
@@ -29,7 +29,7 @@
         status: '',
         list: '',
         fee: '',
-        btn: true,
+        btn: false,
         mm: 19,
         ss: 59
       }
@@ -43,11 +43,13 @@
         if (this.dataList.tradeStatus == '0') {
           this.fee = this.dataList.totalFee
           this.status = '支付成功!'
-         c
+          this.list = '感谢您是使用，祝你旅途愉快!'
+          this.btn = true
         } else {
-          this.btn = false
+
           this.status = '支付失败!'
-          this.left = '支付失败，请重新支付'
+          this.list = '支付失败，请重新支付'
+
         }
       }).catch(error => {
         console.log(error)
