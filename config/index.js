@@ -46,12 +46,14 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../carpay/index.html'),
+    carpay: path.resolve(__dirname, '../carpay/carpay.html'),
+    pay: path.resolve(__dirname, '../carpay/pay.html'),
+    paysuccess: path.resolve(__dirname, '../carpay/paysuccess.html'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../carpay'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/zslihe/carpay/',
+    assetsPublicPath: 'http://123.206.230.152/carpay/',
 
     /**
      * Source Maps

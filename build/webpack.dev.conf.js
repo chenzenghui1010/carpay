@@ -53,9 +53,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
+      filename: 'pay.html',
+      template: 'pay.html',
+      inject: true,
+      chunks:['pay', 'vendor', 'manifest']
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'paysuccess.html',
+      template: 'paysuccess.html',
+      inject: true,
+      chunks:['paysuccess', 'vendor', 'manifest']
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'carpay.html',
+      template: 'carpay.html',
+      inject: true,
+      chunks:['carpay', 'vendor', 'manifest']
     }),
     // copy custom static assets
     new CopyWebpackPlugin([

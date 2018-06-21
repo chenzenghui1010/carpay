@@ -22,6 +22,9 @@
 </template>
 
 <script>
+
+  import { getQueryString } from "../utils/globalhelper";
+
   export default {
     name: 'paysuccess',
     data() {
@@ -36,9 +39,10 @@
       }
     },
     created() {
-      let orderNo = this.$route.query.orderNo
+
+      let orderNo = getQueryString('orderNo')
       let url = '/jspsn/XmppServer.servlet?ver=' + new Date().getTime() + '&serviceId=ac.pay.querypayresult&attributes={"orderNo":"' + orderNo + '"}'
-      let resurl = this.$route.query.resurl
+      let resurl = getQueryString('resurl')
       this.$axios.post(url, {}).then(res => {
         this.dataList = res.data.attributes
         if (this.dataList.tradeStatus == '0') {

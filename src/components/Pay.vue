@@ -21,9 +21,19 @@
 </template>
 
 <script>
+
+  import { getQueryString } from "../utils/globalhelper";
+
   export default {
     name: 'pay',
     data() {
+
+      const endTime = getQueryString('endTime')
+      const startTime = getQueryString('startTime')
+      const totalFee = getQueryString('totalFee')
+      const orderNo = getQueryString('orderNo')
+      const openId = getQueryString('openId')
+
       return {
         callbackUrl: window.callbackUrl,
         merchantCode: window.merchantCode,
@@ -31,19 +41,18 @@
         jparkingURL: window.jparkingURL,
         payUrl: window.payUrl,
         carNo: sessionStorage.getItem('carNo'),
-        endTime: this.$route.query.endTime,
-        startTime: this.$route.query.startTime,
+        endTime: endTime,
+        startTime: startTime,
         days: '',hours: '', minutes: '',
-        totalFee: this.$route.query.totalFee,
-        orderNo: this.$route.query.orderNo,
-        openId: this.$route.query.openId,
+        totalFee: totalFee,
+        orderNo: orderNo,
+        openId: openId,
         payData: '',
       }
     },
     created() {
-     document.getElementById('title').innerText = '车牌支付'
-      this.time
 
+     document.title = '车牌支付'
     },
     methods: {
       dopay: function () {
