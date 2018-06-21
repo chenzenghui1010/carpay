@@ -70,7 +70,7 @@
         window.location.href=window.openUrl+'?reqSource=WX_JTC&codeType=base&redirectUrl='+window.redirectUrl;
       }
 
-      document.getElementById("title").innerText = '停车缴费'
+      document.title = '停车缴费'
 
       if (this.count.length == 7) {
         this.disabled = false
