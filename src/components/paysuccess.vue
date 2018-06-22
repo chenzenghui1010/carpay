@@ -40,7 +40,7 @@
     },
     created() {
       let orderNo = getQueryString('orderNo')
-      let url = '/jspsn/XmppServer.servlet?ver=' + new Date().getTime() + '&serviceId=ac.pay.querypayresult&attributes={"orderNo":"' + orderNo + '"}'
+      let url =window.orderQueUrl+ '?ver='  + new Date().getTime() + '&serviceId=ac.pay.querypayresult&attributes={"orderNo":"' + orderNo + '"}'
       this.$axios.post(url, {}).then(res => {
         this.dataList = res.data.attributes
         if (this.dataList.tradeStatus == '0') {

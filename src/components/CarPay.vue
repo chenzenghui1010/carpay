@@ -157,8 +157,7 @@
 
         let id = getQueryString('clientId')
 
-
-        let url = 'https://ceshicloud-of.jslife.net/jparking-service/order/carno/pay'
+        let url = 'https://ceshicloud-of.jslife.net'+window.carnoPayUrl
         var carpay = {
           'parkCode': this.parkCode,
           'carNo': this.carNo,
@@ -331,13 +330,14 @@
   }
 
   .inputitem {
+    display: flex;
     height: 4rem;
     width: 90%;
     background-color: white;
     display: flex;
     display: -webkit-flex;
     -webkit-box-align: center;
-    align-items: center;
+    /*align-items: center;*/
   }
 
   .chunk {
@@ -349,7 +349,7 @@
     flex-shrink: 1;
     text-align: center;
     color: black;
-    line-height: 4rem;
+    line-height: 3.6rem;
     font-size: 1.8rem;
     font-family: "Microsoft Yahei", "Arial", "Helvetica";
   }
@@ -444,7 +444,7 @@
     margin-top: 0.5rem;
     border-radius: 5px;
     text-align: center;
-    line-height: 4rem;
+    /*line-height: 4rem;*/
     font-size: 1.4rem;
     margin-top: 20px;
   }

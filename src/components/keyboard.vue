@@ -46,10 +46,10 @@
 
   export default {
 
-    name:'carnokeyboard',
+    name: 'carnokeyboard',
     props: ['inputtype'],
-    computed:{
-      items:function () {
+    computed: {
+      items: function () {
 
         if (this.inputtype == 0) {
 
@@ -72,12 +72,12 @@
         }
       }
     },
-    methods:{
-      ondelete:function () {
+    methods: {
+      ondelete: function () {
 
         this.$emit('delete')
       },
-      onselect:function (value) {
+      onselect: function (value) {
 
         this.$emit('select', value)
       }
@@ -92,7 +92,7 @@
 
     background-color: #d1d5de;
     position: absolute;
-    bottom:0;
+    bottom: 0;
     width: 100%;
     /*height: 50%;*/
   }
@@ -119,12 +119,12 @@
     border-radius: 6px;
     margin: 10px 0px;
     background-color: white;
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.5);
   }
 
   .delete {
 
-    box-shadow: 0px 2px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.5);
     width: 160%;
     font-size: 1.5rem;
     line-height: 1.8;

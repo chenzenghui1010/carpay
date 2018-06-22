@@ -69,7 +69,6 @@
           "couponNo": ""   //全网优惠券编号
         }
 
-        // this.$router.push({path:'paysuccess'})
         let url = this.payUrl + '=' + JSON.stringify(p)
           window.location.href = url
       }
@@ -86,7 +85,6 @@
         let hours = (hour > 0 ? hour + '小时' : '');
         let minutes = (minute > 0 ? minute + '分钟' : '');
         return days+hours+minutes
-       // return days ,hours,minutes
        },
 
       sub: function () {
