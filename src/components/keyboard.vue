@@ -5,7 +5,6 @@
         <div v-for="unit in item" class="item" v-on:click="onselect(unit)">{{ unit }}</div>
         <div v-if="index == items.length - 1" class="delete" v-on:click="ondelete">&nbsp;</div>
       </div>
-
     </div>
   </div>
 </template>
@@ -98,10 +97,10 @@
   }
 
   .container {
-
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    padding-bottom: 10%;
   }
 
   .line {

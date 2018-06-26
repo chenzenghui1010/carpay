@@ -15,6 +15,13 @@
         <p><span>停留时长</span><span>{{ time }}</span></p>
         <p><span>支付方式</span><span class="wx">微信支付</span></p>
       </div>
+      <div  class="vip">
+        <p>会员优惠时长：</p>
+        <p>微粉卡会员： 无优惠</p>
+        <p>银卡会员： 每天优惠2小时</p>
+        <p>金卡会员： 每天优惠3小时</p>
+        <p>钻石会员： 每天优惠4小时</p>
+      </div>
       <div class="btn" @click="dopay">立即缴费</div>
     </div>
   </div>
@@ -27,7 +34,6 @@
   export default {
     name: 'pay',
     data() {
-
       const endTime = getQueryString('endTime')
       const startTime = getQueryString('startTime')
       const totalFee = getQueryString('totalFee')
@@ -139,9 +145,19 @@
     justify-content: space-between;
     align-items: center;
   }
+.vip{
+  margin-top: 2rem;
+  letter-spacing: 2px;
+  float: left;
+  width: 96%;
+  color: #A17D71;
 
+}
+.vip p{
+  margin-top: 2px;
+  font-size: 1.6rem;
+}
   .feetitle {
-
     font-size: 1.4rem;
     padding-top: 2.5rem;
     align-self: flex-start;
