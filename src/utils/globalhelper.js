@@ -172,15 +172,10 @@ export async function doAjax(url, data) {
         },
       
         success:function (response) {
-        
-          if (response != null && response.code == "success") {
           
-            return resolve(response)
-          }
-          else {
-            
-            return reject(response)
-          }
+          console.log('返回', JSON.stringify(response))
+  
+          return resolve(response)
         },
       
         error:function (response) {
