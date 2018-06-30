@@ -9,13 +9,13 @@
     </div>
     <div v-if="btn" class="paymoney"> 微信支付 ¥ {{ fee }}</div>
     <div v-if="btn" :class=" btn ? 'payyes':'statusimg' "></div>
-    <div  v-if=" !btn" :class=" btn ? 'payyes':'failimg' "></div>
+    <div v-if=" !btn" :class=" btn ? 'payyes':'failimg' "></div>
     <!--<div class="logo">-->
-      <!--<img class="logoimg" src="../assets/LOGO.png" alt="">-->
+    <!--<img class="logoimg" src="../assets/LOGO.png" alt="">-->
     <!--</div>-->
 
     <div v-if="btn" class="time">
-      <p>免费离场时间：<span id="span">{{ mm }}分{{ ss }}秒</span></p>
+      <p>请你于20分钟内完成离场，谢谢！</p>
       <button @click="eInvoice">开电子发票</button>
     </div>
   </div>
@@ -41,10 +41,8 @@
     },
     created() {
       let orderNo = getQueryString('orderNo')
-      alert(orderNo)
-      let url = '/jspsn/XmppServer.servlet?ver=' + new Date().getTime() + '&serviceId=ac.pay.querypayresult&attributes={"orderNo":"' + orderNo + '"}'
-      doAjax(url, {}).then(res => {
-        alert(res)
+      let url = window.orderQueUrl+'?ver=' + new Date().getTime() + '&serviceId=ac.pay.querypayresult&attributes={"orderNo":"' + orderNo + '"}'
+      this.$axios.post(url, {}).then(res => {
         this.dataList = res.data.attributes
         if (this.dataList.tradeStatus == '0') {
           this.fee = this.dataList.totalFee
@@ -59,7 +57,7 @@
         console.log(error)
       })
 
-       this.setTime()
+      this.setTime()
 
     },
     methods: {
@@ -113,7 +111,8 @@
 
   .time p {
     font-size: 2rem;
-    color: #2D2F3B;
+    color: #4A4A4A;
+    margin: 3rem 0;
   }
 
   .time p span {
@@ -201,19 +200,19 @@
   }
 
   /*.logo {*/
-    /*position: absolute;*/
-    /*width: 100%;*/
-    /*height: 100%;*/
-    /*text-align: center;*/
+  /*position: absolute;*/
+  /*width: 100%;*/
+  /*height: 100%;*/
+  /*text-align: center;*/
   /*}*/
 
   /*.logoimg {*/
 
-    /*display: inline-block;*/
-    /*margin-top: 130%;*/
-    /*width: 11rem;*/
-    /*height: 6.9rem;*/
-    /*background: #fff;*/
-    /*position: revert;*/
+  /*display: inline-block;*/
+  /*margin-top: 130%;*/
+  /*width: 11rem;*/
+  /*height: 6.9rem;*/
+  /*background: #fff;*/
+  /*position: revert;*/
   /*}*/
 </style>

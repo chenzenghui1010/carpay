@@ -16,11 +16,12 @@
         <p><span>支付方式</span><span class="wx">微信支付</span></p>
       </div>
       <div  class="vip">
-        <p>会员优惠时长：</p>
-        <p>微粉卡会员： 无优惠</p>
-        <p>银卡会员： 每天优惠2小时</p>
-        <p>金卡会员： 每天优惠3小时</p>
-        <p>钻石会员： 每天优惠4小时</p>
+        <p>如阁下车牌已绑定利和广场会员,应缴费用已作相应会员停车优惠减免。<br>会员停车优惠只能在利和广场营业时间内生效,一卡一车,每日一次</p>
+        <p>粉卡会员： 无停车优惠</p>
+        <p>银卡会员： 可享受2小时停车优惠</p>
+        <p>金卡会员： 可享受3小时停车优惠</p>
+        <p>钻卡会员： 可享受4小时停车优惠</p>
+        <p>如有疑问请联系利和物业管理中心,联系电话：0760-85750000</p>
       </div>
       <div class="btn" @click="dopay">立即缴费</div>
     </div>
@@ -42,11 +43,15 @@
 
       return {
         callbackUrl: window.callbackUrl,
+
         merchantCode: window.merchantCode,
+
         parkCode: window.parkCode,
+
         jparkingURL: window.jparkingURL,
+
         payUrl: window.payUrl,
-        carNo: sessionStorage.getItem('carNo'),
+        carNo: localStorage.getItem('carNo'),
         endTime: endTime,
         startTime: startTime,
         days: '',hours: '', minutes: '',
@@ -115,7 +120,7 @@
     border-radius: 1.2rem;
     display: flex;
     display: -webkit-flex;
-    height: 94%;
+    height: 96%;
     width: 96%;
     flex-direction: column;
     align-items: center;
@@ -141,21 +146,25 @@
     background-color: #f6f6f6;
     width: 100%;
     display: flex;
-    height: 10.5rem;
+    height: 8.5rem;
     justify-content: space-between;
     align-items: center;
   }
 .vip{
-  margin-top: 2rem;
-  letter-spacing: 2px;
-  float: left;
-  width: 96%;
-  color: #A17D71;
 
+  font-family: PingFangSC-Regular;
+  width: 94%;
 }
 .vip p{
-  margin-top: 2px;
-  font-size: 1.6rem;
+  color: #4A4A4A;
+  font-size: 0.9rem;
+}
+.vip p:first-child{
+  margin: 0.8rem 0;
+
+}
+.vip p:last-child{
+ margin-top: 0.4rem;
 }
   .feetitle {
     font-size: 1.4rem;
@@ -176,7 +185,7 @@
   }
 
   .section p {
-    height: 4.5rem;
+    height: 4.2rem;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #F5F5F5;
@@ -184,7 +193,7 @@
 
   p span {
     display: inline-block;
-    line-height: 4.5rem;
+    line-height: 4.2rem;
     font-size: 1.4rem;
     letter-spacing: 0;
   }

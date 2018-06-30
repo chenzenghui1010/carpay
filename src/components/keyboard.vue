@@ -100,7 +100,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    padding-bottom: 10%;
+    padding-bottom: 5%;
   }
 
   .line {

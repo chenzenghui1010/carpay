@@ -44,7 +44,6 @@
         inputindex: 0,
         parkCode: window.parkCode,
         url: location.href,
-        carNo: '',
         logo: require('../assets/LOGO.png'),
         show: false,
         alert: '',
@@ -59,9 +58,20 @@
 
     created() {
       document.title = '停车缴费'
+
     }
     ,
-
+    mounted() {
+      if (this.newresourcecar == false) {
+        this.carno = localStorage.getItem('carNo').substring(0, 7)
+      } else {
+        this.carno = localStorage.getItem('carNo')
+      }
+      if (!(this.carno == '' || this.carno == null)) {
+        this.begininput = false
+        this.inputindex = 7
+      }
+    },
     watch: {
       carno: function (newvalue) {
         this.enable = newvalue.length > 6
@@ -72,17 +82,18 @@
           let closeT = document.getElementsByClassName('chunk').length
           this.disabled = true
           this.begininput = true
-          if(closeT > 7){
+          if (closeT > 7) {
             this.begininput = false
           }
-
         }
       },
     },
 
     methods: {
+
       deleteCarNo: function () {
         this.begininput = true
+
       },
       getLetter: function (index) {
         if (index >= this.carno.length) {
@@ -92,31 +103,34 @@
       }
       ,
       doquery: function () {
-        let value = document.getElementsByClassName('chunk')
-        if (this.count == 7) {
-          for (var i = 0; i < value.length; i++) {
-            this.carNo += value[i].innerHTML
-          }
-          sessionStorage.setItem('carNo', this.carNo.substring(0, 7))
-        }
-        if (this.count == 8) {
-          for (var i = 0; i < value.length; i++) {
-            this.carNo += value[i].innerHTML
-          }
-          sessionStorage.setItem('carNo', this.carNo.substring(0, 8))
-        }
+
+        // if(this.carNo == '') {
+        //   let value = document.getElementsByClassName('chunk')
+        //   if (this.count == 7) {
+        //     for (var i = 0; i < value.length; i++) {
+        //       this.carNo += value[i].innerHTML
+        //     }
+        //     localStorage.setItem('carNo', this.carNo.substring(0, 7))
+        //   }
+        //   if (this.count == 8) {
+        //     for (var i = 0; i < value.length; i++) {
+        //       this.carNo += value[i].innerHTML
+        //     }
+        //     localStorage.setItem('carNo', this.carNo.substring(0, 8))
+        //   }
+        // }
 
         let id = getQueryString('clientId')
-
-        let url = 'https://ceshicloud-of.jslife.net' + window.carnoPayUrl
+        let url = 'https://ceshicloud-of.jslife.net'+window.carnoPayUrl
         var carpay = {
           'parkCode': this.parkCode,
-          'carNo': this.carNo,
+          'carNo': this.carno,
           'orderType': 'VNP'
         }
         this.$axios.post(url, carpay).then(res => {
           if (res.data.resultCode == 0) {
             if (res.data.dataItems[0].attributes.retcode == '0') {
+              localStorage.setItem('carNo', this.carno)
               let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
               window.location.href = './pay.html?openId=' + id + '&endTime=' + endTime + '&startTime=' + startTime + '&totalFee=' + totalFee + '&orderNo=' + orderNo
             } else {
@@ -124,7 +138,7 @@
               this.show = true
               setTimeout(() => {
                 this.show = false
-                this.carNo = ''
+                // this.inputindex = 0
               }, 1000)
             }
           } else if (res.data.resultCode == 1) {
@@ -132,7 +146,8 @@
             this.show = true
             setTimeout(() => {
               this.show = false
-              this.carNo = ''
+              // this.carno = ''
+              // this.inputindex = 0
             }, 1000)
           }
         })
@@ -152,6 +167,8 @@
         this.inputindex = Math.max(0, this.inputindex - 1)
 
         this.carno = this.carno.substr(0, this.inputindex)
+        // this.carNo =this.carNo.substring(0,this.carNo.length-1)
+        //  alert(this.carNo)
       }
       ,
       selectletter: function (value) {
@@ -208,13 +225,13 @@
         if (this.inputindex == 1) {
           return 1
         }
-      if(this.newresourcecar == false) {
-        if (this.inputindex == 7) {
-          this.disabled = false
-          this.begininput = false
-          return 2
+        if (this.newresourcecar == false) {
+          if (this.inputindex == 7) {
+            this.disabled = false
+            this.begininput = false
+            return 2
+          }
         }
-      }
         if (this.inputindex == 8) {
           this.disabled = false
           this.begininput = false
