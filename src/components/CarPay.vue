@@ -3,7 +3,9 @@
     <div class="car"></div>
     <!--v-on:click="doinput"-->
     <div class="inputitem">
-      <div v-for="(i,index) in count" v-bind:class="getchunkstyle(i - 1)" v-bind:key="i" @click="deleteCarNo">{{getLetter(i - 1) }}</div>
+      <div v-for="(i,index) in count" v-bind:class="getchunkstyle(i - 1)" v-bind:key="i" @click="deleteCarNo">
+        {{getLetter(i - 1) }}
+      </div>
     </div>
     <div class="tip">
       <div class="checkbox">
@@ -62,11 +64,11 @@
     }
     ,
     mounted() {
-      if (this.newresourcecar == false) {
-        this.carno = localStorage.getItem('carNo').substring(0, 7)
-      } else {
-        this.carno = localStorage.getItem('carNo')
-      }
+      // if (this.newresourcecar == false) {
+      //   this.carno = localStorage.getItem('carNo').substring(0, 7)
+      // } else {
+      //   this.carno = localStorage.getItem('carNo')
+      // }
       if (!(this.carno == '' || this.carno == null)) {
         this.begininput = false
         this.inputindex = 7
@@ -76,12 +78,13 @@
       carno: function (newvalue) {
         this.enable = newvalue.length > 6
       },
+
       newresourcecar: function (newvalue) {
         this.count = this.newresourcecar ? 8 : 7
         if (newvalue == true) {
           let closeT = document.getElementsByClassName('chunk').length
-          this.disabled = true
-          this.begininput = true
+          // this.disabled = true
+          // this.begininput = true
           if (closeT > 7) {
             this.begininput = false
           }
@@ -104,24 +107,8 @@
       ,
       doquery: function () {
 
-        // if(this.carNo == '') {
-        //   let value = document.getElementsByClassName('chunk')
-        //   if (this.count == 7) {
-        //     for (var i = 0; i < value.length; i++) {
-        //       this.carNo += value[i].innerHTML
-        //     }
-        //     localStorage.setItem('carNo', this.carNo.substring(0, 7))
-        //   }
-        //   if (this.count == 8) {
-        //     for (var i = 0; i < value.length; i++) {
-        //       this.carNo += value[i].innerHTML
-        //     }
-        //     localStorage.setItem('carNo', this.carNo.substring(0, 8))
-        //   }
-        // }
-
         let id = getQueryString('clientId')
-        let url = 'https://ceshicloud-of.jslife.net'+window.carnoPayUrl
+        let url = 'https://ceshicloud-of.jslife.net' + window.carnoPayUrl
         var carpay = {
           'parkCode': this.parkCode,
           'carNo': this.carno,
@@ -220,24 +207,40 @@
     computed: {
       inputtype: function () {
         if (this.inputindex == 0) {
+
           return 0
         }
         if (this.inputindex == 1) {
+
           return 1
         }
         if (this.newresourcecar == false) {
-          if (this.inputindex == 7) {
-            this.disabled = false
-            this.begininput = false
-            return 2
+
+          if (this.inputindex == 6) {
+
+            return 3
+
           }
+          if (this.inputindex == 7) {
+
+            this.disabled = false
+
+            this.begininput = false
+
+          }
+
+        }
+        if (this.inputindex == 7) {
+
+          return 3
         }
         if (this.inputindex == 8) {
           this.disabled = false
+
           this.begininput = false
-          return 2
+
         }
-        return 3
+        return 2
       },
       btnstyle: function () {
         if (this.enable) {
