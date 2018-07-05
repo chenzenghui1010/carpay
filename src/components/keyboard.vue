@@ -35,7 +35,7 @@
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'P', '港', '澳'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '学'],
     ['Z', 'X', 'C', 'V', 'B', 'N', 'M']]
-  
+
   export default {
 
     name: 'keyboard',
@@ -148,13 +148,14 @@
 
   .line {
     display: flex;
-    /*width: 100%;*/
-    /*justify-content: center;*/
+    display: -webkit-flex;
     justify-content: center;
+    -webkit-justify-content: center;
+    align-items: center;
+    -webkit-align-items: center;
   }
 
   .item {
-
 
     font-size: 2rem;
     background: #FFF;
@@ -172,7 +173,9 @@
     width: 10%;
     height: 4rem;
     font-size: 1.5rem;
-    margin-left: 44%;
+    right: 0.4rem;
+    /*margin-left: 44%;*/
+    /*justify-content: flex-end;*/
     background: #AFB3BE;
     box-shadow: 0 2px 0 0 #686A6E;
     border-radius: 10px;

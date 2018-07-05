@@ -269,8 +269,12 @@
   }
 
   .alert {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     position: absolute;
-    margin: 65% auto;
+    margin: auto;
     height: 5rem;
     width: 25rem;
     background: rgba(45, 47, 59, 0.50);
