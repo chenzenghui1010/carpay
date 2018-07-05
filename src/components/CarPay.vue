@@ -59,8 +59,7 @@
 
     created() {
       document.title = '停车缴费'
-    }
-    ,
+    },
 
     watch: {
       carno: function (newvalue) {
