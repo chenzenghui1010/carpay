@@ -36,7 +36,6 @@
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '学'],
     ['Z', 'X', 'C', 'V', 'B', 'N', 'M']]
 
-
   export default {
 
     name: 'keyboard',
@@ -152,6 +151,7 @@
     -webkit-justify-content: center;
     align-items: center;
     -webkit-align-content: center;
+
   }
 
   .item {
