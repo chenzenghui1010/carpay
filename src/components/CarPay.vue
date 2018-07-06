@@ -1,7 +1,6 @@
 <template>
   <div class="main">
     <div class="car"></div>
-    <!--v-on:click="doinput"-->
     <div class="inputitem">
       <div v-for="(i,index) in count" v-bind:class="getchunkstyle(i - 1)" v-bind:key="i" @click="deleteCarNo">
         {{getLetter(i - 1) }}
@@ -13,7 +12,7 @@
         <label for="checkbox1"></label>新能源车
       </div>
     </div>
-    <button v-bind:class="btnstyle" :disabled="disabled" @click="doquery">去缴费</button>
+    <button v-bind:class="{enable :enable}"   class="btn" :disabled="disabled" @click="doquery">去缴费</button>
     <carnokeyboard v-on:select="selectletter" v-on:delete="deleteletter" v-show="begininput"
                    v-bind:inputtype="inputtype"></carnokeyboard>
     <div class="vip">
@@ -24,15 +23,15 @@
     <div class="alert" v-if="show">
       <p>{{alert}}</p>
     </div>
-
+  
   </div>
 </template>
 
 <script>
-
+  
   import {getQueryString} from "../utils/globalhelper";
   import Carnokeyboard from "./keyboard.vue";
-
+  
   export default {
     components: {Carnokeyboard},
     name: 'querycar',
@@ -51,24 +50,18 @@
         alert: '',
         disabled: true,
         formData: {
-          phone: '',
+          phone: "",
           code: '',
         },
         timer: null,
       }
     },
-
+    
     created() {
       document.title = '停车缴费'
-
-    }
-    ,
+    },
+    
     mounted() {
-      // if (this.newresourcecar == false) {
-      //   this.carno = localStorage.getItem('carNo').substring(0, 7)
-      // } else {
-      //   this.carno = localStorage.getItem('carNo')
-      // }
       if (!(this.carno == '' || this.carno == null)) {
         this.begininput = false
         this.inputindex = 7
@@ -77,26 +70,18 @@
     watch: {
       carno: function (newvalue) {
         this.enable = newvalue.length > 6
+        this.newValue  == 7? this.disabled = false :this.disabled = true
       },
-
+      
       newresourcecar: function (newvalue) {
         this.count = this.newresourcecar ? 8 : 7
-        if (newvalue == true) {
-          let closeT = document.getElementsByClassName('chunk').length
-          // this.disabled = true
-          // this.begininput = true
-          if (closeT > 7) {
-            this.begininput = false
-          }
-        }
       },
     },
-
+    
     methods: {
-
       deleteCarNo: function () {
         this.begininput = true
-
+        
       },
       getLetter: function (index) {
         if (index >= this.carno.length) {
@@ -106,7 +91,7 @@
       }
       ,
       doquery: function () {
-
+        
         let id = getQueryString('clientId')
         let url = 'https://ceshicloud-of.jslife.net' + window.carnoPayUrl
         var carpay = {
@@ -125,7 +110,6 @@
               this.show = true
               setTimeout(() => {
                 this.show = false
-                // this.inputindex = 0
               }, 1000)
             }
           } else if (res.data.resultCode == 1) {
@@ -133,13 +117,11 @@
             this.show = true
             setTimeout(() => {
               this.show = false
-              // this.carno = ''
-              // this.inputindex = 0
             }, 1000)
           }
         })
       },
-
+      
       doinput: function () {
         if (this.begininput) {
           return
@@ -150,103 +132,85 @@
       }
       ,
       deleteletter: function () {
-
+        
         this.inputindex = Math.max(0, this.inputindex - 1)
-
+        
         this.carno = this.carno.substr(0, this.inputindex)
-        // this.carNo =this.carNo.substring(0,this.carNo.length-1)
-        //  alert(this.carNo)
+        
       }
       ,
       selectletter: function (value) {
-
+        
         this.carno = this.carno + value
-
+        
         this.inputindex += 1
       }
       ,
       getchunkstyle: function (index) {
-
+        
         if (!this.newresourcecar) {
-
+          
           if (index == 0 && this.carno.length >= 1) {
-
+            
             return 'chunk bluecolor'
           }
-
+          
           return 'chunk noe'
         }
         else {
-
+          
           if (index == 0 && this.carno.length >= 1) {
-
+            
             return 'chunk deepgreencolor'
           }
-
+          
           return 'chunk greencolor'
         }
       }
-      ,
-      getCode(formData) {
-        if (!this.timer) {
-          this.count = TIME_COUNT;
-          this.show = false;
-          this.timer = setInterval(() => {
-            if (this.count > 0 && this.count <= TIME_COUNT) {
-              this.count--;
-            } else {
-              this.show = true;
-              clearInterval(this.timer);
-              this.timer = null;
-            }
-          }, 1000)
-        }
-      }
     },
-
+    
     computed: {
       inputtype: function () {
         if (this.inputindex == 0) {
-
+          
           return 0
         }
         if (this.inputindex == 1) {
-
+          
           return 1
         }
         if (this.newresourcecar == false) {
-
+          
           if (this.inputindex == 6) {
-
+           
             return 3
-
+            
           }
           if (this.inputindex == 7) {
-
+            this.enable = true
             this.disabled = false
-
+            
             this.begininput = false
-
+            
           }
-
+          
         }
-        if (this.inputindex == 7) {
-
-          return 3
-        }
-        if (this.inputindex == 8) {
-          this.disabled = false
-
-          this.begininput = false
-
+        if (this.newresourcecar == true) {
+          if (this.inputindex == 7) {
+            this.enable = false
+            this.disabled = true
+            this.begininput = true
+            return 3
+          }
+          if (this.inputindex == 8) {
+            this.enable = true
+            this.disabled = false
+            this.begininput = false
+            
+          }
+          
         }
         return 2
-      },
-      btnstyle: function () {
-        if (this.enable) {
-          return 'btn enable'
-        }
-        return 'btn disable'
       },
     },
   }
@@ -254,20 +218,20 @@
 </script>
 
 <style scoped>
-
+  
   .vip {
     margin-top: 5%;
     float: left;
     width: 90%;
     color: #A17D71;
   }
-
+  
   .vip div {
     margin-top: 5px;
     font-size: 1.6rem;
     letter-spacing: 4px;
   }
-
+  
   .alert {
     top: 0;
     bottom: 0;
@@ -280,7 +244,7 @@
     background: rgba(45, 47, 59, 0.50);
     border-radius: 50px;
   }
-
+  
   .alert p {
     width: 100%;
     height: 100%;
@@ -289,7 +253,7 @@
     color: #fff;
     font-size: 1.8rem;
   }
-
+  
   .main {
     width: 100%;
     height: 100%;
@@ -300,7 +264,7 @@
     align-items: center;
     background-color: whitesmoke;
   }
-
+  
   .car {
     margin-top: 2.5rem;
     margin-bottom: 2.5rem;
@@ -309,7 +273,7 @@
     background: url("../assets/LOGO.png") no-repeat center / 10rem;
     overflow: visible;
   }
-
+  
   .inputitem {
     display: flex;
     height: 4rem;
@@ -320,7 +284,7 @@
     -webkit-box-align: center;
     /*align-items: center;*/
   }
-
+  
   .chunk {
     border: 1px solid #979797;
     border-left: 0px;
@@ -334,32 +298,32 @@
     font-size: 1.8rem;
     font-family: "Microsoft Yahei", "Arial", "Helvetica";
   }
-
+  
   .chunk:first-child {
-
+    
     border: 1px solid #979797;
   }
-
+  
   .noe:nth-child(1) {
     background-color: #A17D71;
   }
-
+  
   .bluecolor {
     background-color: #A17D71;
     color: white;
   }
-
+  
   .deepgreencolor {
-
+    
     background-color: #7ed321;
     color: white;
   }
-
+  
   .greencolor {
     background-color: #B8E986;
     color: #fff;
   }
-
+  
   .tip {
     display: flex;
     justify-content: flex-end;
@@ -369,14 +333,14 @@
     color: #b8c2c7;
     height: 10px;
   }
-
+  
   input[type=checkbox] {
-
+    
     display: none;
   }
-
+  
   label {
-
+    
     display: inline-block;
     height: 20px;
     width: 20px;
@@ -385,19 +349,19 @@
     box-sizing: border-box;
     vertical-align: middle;
   }
-
+  
   label::before {
-
+    
     content: '';
     width: 20px;
     height: 20px;
     display: inline-block;
-
+    
     margin-right: 1rem;
   }
-
+  
   input:checked + label::before {
-
+    
     border: 2px solid #7ed321;
     border-top: none;
     border-right: none;
@@ -410,14 +374,14 @@
     left: 5px;
     position: absolute;
   }
-
+  
   .checkbox {
-
+    
     position: relative;
     color: #2D2F3B;
     font-size: 1.4rem;
   }
-
+  
   .btn {
     width: 90%;
     height: 4rem;
@@ -427,35 +391,34 @@
     /*line-height: 4rem;*/
     font-size: 1.4rem;
     margin-top: 5rem;
-  }
-
-  .enable {
-
-    background-color: #A17D71;
-    color: white;
-    font-size: 1.4rem;
-  }
-
-  .disable {
-
-    /*background-color: gray;*/
     color: #b8c2c7;
     font-size: 1.8rem;
     border: 1px solid #d8d8d8;
   }
-
+  
+  .enable {
+    
+    background-color: #A17D71;
+    color: white;
+    font-size: 1.4rem;
+  }
+  
+  .disable {
+  
+  }
+  
   img {
     display: inline-block;
     width: 11rem;
     text-align: center;
     height: 6.9rem;
   }
-
+  
   button {
     background: whitesmoke;
     outline: none;
     border: none;
-
+    
   }
 
 </style>

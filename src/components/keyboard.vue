@@ -87,9 +87,7 @@
         this.$emit('delete')
       },
       onselect: function (value) {
-
-        console.log(this.inputtype)
-
+        
         if (this.inputtype == 1) {
 
           for (let i = 0; i < 10; i++) {
@@ -147,15 +145,15 @@
 
   .line {
     display: flex;
-    display: -webkit-flex;
+    display:  -webkit-flex;
     justify-content: center;
     -webkit-justify-content: center;
     align-items: center;
-    -webkit-align-items: center;
+    -webkit-align-content: center;
+
   }
 
   .item {
-
     font-size: 2rem;
     background: #FFF;
     box-shadow: 0 2px 0 0 #686A6E;
@@ -168,15 +166,14 @@
 
   .delete {
     position: absolute;
-    margin-top: 1rem;
+    /*top: 100px;*/
+    bottom: 1rem;
     width: 10%;
     height: 4rem;
     font-size: 1.5rem;
     right: 0.4rem;
-    /*margin-left: 44%;*/
-    /*justify-content: flex-end;*/
     background: #AFB3BE;
-    box-shadow: 0 2px 0 0 #686A6E;
+    /*box-shadow: 0 2px 0 0 #686A6E;*/
     border-radius: 10px;
     background: #AFB3BE url("../assets/return.png") no-repeat center/ 25px;
 
