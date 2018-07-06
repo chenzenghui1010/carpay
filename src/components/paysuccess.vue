@@ -7,7 +7,7 @@
         <div class="tip" v-text="list"></div>
       </div>
     </div>
-    <div v-if="btn" class="paymoney"> 支付 ¥ {{fee }}</div>
+    <div v-if="btn" class="paymoney"> 支付 ¥ {{ fee }}</div>
     <div v-if="btn" :class=" btn ? 'payyes':'statusimg' "></div>
     <div v-if=" !btn" :class=" btn ? 'payyes':'failimg' "></div>
     <!--<div class="logo">-->
@@ -15,7 +15,7 @@
     <!--</div>-->
     
     <div v-if="btn" class="time">
-      <p>请你于20分钟内完成离场，谢谢！</p>
+      <p>请您于20分钟内完成离场，谢谢！</p>
       <button @click="eInvoice">开电子发票</button>
     </div>
   </div>
@@ -33,7 +33,7 @@
         dataList: {},
         status: '',
         list: '',
-        fee:sessionStorage.getItem('fee'),
+        fee:localStorage.getItem('fee'),
         btn: false,
         mm: 19,
         ss: 59
@@ -55,7 +55,7 @@
   
         this.status = '支付成功!'
   
-        this.list = '感谢您是使用，祝你旅途愉快!'
+        this.list = '感谢您使用，祝您旅途愉快!'
   
         this.btn = true
         
@@ -91,8 +91,7 @@
           }
           
         }, 1000)
-      }
-      ,
+      },
     }
     
   }
@@ -119,7 +118,7 @@
     width: 100%;
     height: 50px;
     margin: auto;
-    top: 0;
+    top: 10rem;
     bottom: 0;
     left: 0;
     right: 0;
@@ -215,20 +214,4 @@
     align-self: center
   }
   
-  /*.logo {*/
-  /*position: absolute;*/
-  /*width: 100%;*/
-  /*height: 100%;*/
-  /*text-align: center;*/
-  /*}*/
-  
-  /*.logoimg {*/
-  
-  /*display: inline-block;*/
-  /*margin-top: 130%;*/
-  /*width: 11rem;*/
-  /*height: 6.9rem;*/
-  /*background: #fff;*/
-  /*position: revert;*/
-  /*}*/
 </style>

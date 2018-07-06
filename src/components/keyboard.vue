@@ -155,7 +155,6 @@
   }
 
   .item {
-
     font-size: 2rem;
     background: #FFF;
     box-shadow: 0 2px 0 0 #686A6E;
@@ -168,13 +167,14 @@
 
   .delete {
     position: absolute;
-    margin-top: 1rem;
+    /*top: 100px;*/
+    bottom: 1rem;
     width: 10%;
     height: 4rem;
     font-size: 1.5rem;
     right: 0.4rem;
     background: #AFB3BE;
-    box-shadow: 0 2px 0 0 #686A6E;
+    /*box-shadow: 0 2px 0 0 #686A6E;*/
     border-radius: 10px;
     background: #AFB3BE url("../assets/return.png") no-repeat center/ 25px;
 

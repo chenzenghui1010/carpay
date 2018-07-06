@@ -69,7 +69,7 @@
       
       
       dopay: function () {
-        sessionStorage.setItem('fee', this.totalFee)
+        localStorage.setItem('fee', this.totalFee)
         let p = {
           "channelId": this.browserType,
           "orderNo": this.orderNo,
