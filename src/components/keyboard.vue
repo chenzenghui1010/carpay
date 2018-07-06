@@ -1,9 +1,9 @@
 <template>
   <div class="keyboard">
     <div class="container">
-      <div v-for="(item, index) in items" class="line">
-        <div v-for="unit in item" class="item" v-on:click="onselect(unit)">{{ unit }}</div>
-        <div v-if="index == items.length - 1" class="delete" v-on:click="ondelete">&nbsp;</div>
+      <div v-for="(item, index) in items" :class="unusable " class="line ">
+        <span v-for="unit in item" class="item" v-on:click="onselect(unit)"> {{ unit }}</span>
+        <div v-if="index == items.length-1 " class="delete" v-on:click="ondelete">&nbsp;</div>
       </div>
     </div>
   </div>
@@ -12,59 +12,70 @@
 <script>
 
   const keyboarditems_0 = [
-    ['京', '晋', '吉', '闽', '桂', '藏'],
-    ['粤', '冀', '黑', '陕', '云', '港'],
-    ['沪', '豫', '皖', '甘', '桂', '澳'],
-    ['浙', '川', '鄂', '宁', '琼'],
-    ['苏', '渝', '湘', '蒙', '青'],
-    ['鲁', '辽', '赣', '津', '新']]
+    ['粤', '川', '津', '沪', '渝', '蒙', '新', '藏', '宁', '桂'],
+    ['浙', '晋', '冀', '青', '鲁', '豫', '苏', '皖', '闽'],
+    ['赣', '湘', '鄂', '京', '琼', '甘', '陕', '贵'],
+    ['云', '黑', '吉', '辽', '澳', '港']
+  ]
 
   const keyboarditems_1 = [
-    ['A', 'G', 'M', 'S', 'Y'],
-    ['B', 'H', 'N', 'T', 'Z'],
-    ['C', 'I', 'O', 'U'],
-    ['D', 'J', 'P', 'V'],
-    ['E', 'K', 'Q', 'W'],
-    ['F', 'L', 'R', 'X']]
+    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'P', '港', '澳'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '学'],
+    ['Z', 'X', 'C', 'V', 'B', 'N', 'M']]
 
   const keyboarditems_2 = [
-    ['0', '6', 'C', 'J', 'Q', 'W'],
-    ['1', '7', 'D', 'K', 'R', 'X'],
-    ['2', '8', 'E', 'L', 'S', 'Y'],
-    ['3', '9', 'F', 'M', 'T', 'Z'],
-    ['4', 'A', 'G', 'N', 'U'],
-    ['5', 'B', 'H', 'P', 'V']]
+    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'P', '港', '澳'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '学'],
+    ['Z', 'X', 'C', 'V', 'B', 'N', 'M']]
 
   const keyboarditems_3 = [
-    ['0', '6', 'C', 'J', 'Q', 'W', '学'],
-    ['1', '7', 'D', 'K', 'R', 'X', '警'],
-    ['2', '8', 'E', 'L', 'S', 'Y'],
-    ['3', '9', 'F', 'M', 'T', 'Z'],
-    ['4', 'A', 'G', 'N', 'U', '港'],
-    ['5', 'B', 'H', 'P', 'V', '澳']]
+    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'P', '港', '澳'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '学'],
+    ['Z', 'X', 'C', 'V', 'B', 'N', 'M']]
+
 
   export default {
 
-    name: 'carnokeyboard',
+    name: 'keyboard',
+
     props: ['inputtype'],
+
     computed: {
+
+      unusable: function () {
+
+        if (this.inputtype == 1) {
+
+          return 'count '
+
+        } else if (this.inputtype == 2) {
+
+          return ' special '
+
+        }
+      },
+
+
       items: function () {
 
         if (this.inputtype == 0) {
 
           return keyboarditems_0
-        }
 
+        }
         if (this.inputtype == 1) {
 
           return keyboarditems_1
-        }
 
+        }
         if (this.inputtype == 2) {
 
           return keyboarditems_2
-        }
 
+        }
         if (this.inputtype == 3) {
 
           return keyboarditems_3
@@ -77,8 +88,28 @@
         this.$emit('delete')
       },
       onselect: function (value) {
+        
+        if (this.inputtype == 1) {
+
+          for (let i = 0; i < 10; i++) {
+
+            if (value == i) {
+
+              return
+            }
+          }
+        }
+
+        if (this.inputtype == 1 || this.inputtype == 2)
+
+          if (value == '港' || value == '澳' || value == '学') {
+
+            return
+
+          }
 
         this.$emit('select', value)
+
       }
     }
   }
@@ -86,50 +117,66 @@
 </script>
 
 <style scoped>
+  .count:first-child .item,
+  .count:nth-child(2) .item:nth-child(10),
+  .count:nth-child(2) .item:nth-child(9),
+  .count:nth-child(3) .item:nth-child(10) {
+    background: #C3C8D2;
+  }
+
+  .special:nth-child(2) .item:nth-child(9),
+  .special:nth-child(2) .item:nth-child(10),
+  .special:nth-child(3) .item:nth-child(10) {
+    background: #C3C8D2;
+  }
 
   .keyboard {
-
-    background-color: #d1d5de;
     position: absolute;
+    text-align: center;
+    background-color: #d1d5de;
     bottom: 0;
     width: 100%;
-    /*height: 50%;*/
+    margin: 0 auto;
+    padding-top: 2% ;
+    text-align: center;
   }
 
   .container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding-bottom: 10%;
+
   }
 
   .line {
-
-    width: 14%;
+    display: flex;
+    display:  -webkit-flex;
+    justify-content: center;
+    -webkit-justify-content: center;
+    align-items: center;
+    -webkit-align-content: center;
   }
 
   .item {
 
-    width: 100%;
-    /*height: 10%;*/
-    text-align: center;
-    line-height: 1.8;
-    font-size: 1.5rem;
+    font-size: 2rem;
+    background: #FFF;
+    box-shadow: 0 2px 0 0 #686A6E;
+    height: 4rem;
+    width: 8%;
+    line-height: 4rem;
     border-radius: 6px;
-    margin: 10px 0px;
-    background-color: white;
-    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.5);
+    margin: 1rem 1%;
   }
 
   .delete {
-
-    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.5);
-    width: 160%;
+    position: absolute;
+    margin-top: 1rem;
+    width: 10%;
+    height: 4rem;
     font-size: 1.5rem;
-    line-height: 1.8;
-    margin-left: -60%;
-    border-radius: 6px;
-    background: white url("../assets/返回.png") no-repeat center/ 20px;
-  }
+    right: 0.4rem;
+    background: #AFB3BE;
+    box-shadow: 0 2px 0 0 #686A6E;
+    border-radius: 10px;
+    background: #AFB3BE url("../assets/return.png") no-repeat center/ 25px;
 
+  }
 </style>
