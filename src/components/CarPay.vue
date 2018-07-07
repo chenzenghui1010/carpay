@@ -93,7 +93,7 @@
       doquery: function () {
         
         let id = getQueryString('clientId')
-        let url = 'https://ceshicloud-of.jslife.net' + window.carnoPayUrl
+        let url =  window.carnoPayUrl
         var carpay = {
           'parkCode': this.parkCode,
           'carNo': this.carno,
