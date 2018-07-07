@@ -137,7 +137,6 @@
     width: 100%;
     margin: 0 auto;
     padding-top: 2% ;
-    text-align: center;
   }
 
   .container {
