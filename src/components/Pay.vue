@@ -4,12 +4,12 @@
       <div class="title">利和广场停车场</div>
       <div class="feeinfo">
         <div class="feetitle">应付费用</div>
-        <div style="padding-right: 1rem">
-          <label class="fee">{{ totalFee }}</label><label class="rmb">¥</label>
+        <div  style="padding-right: 1rem ;display: inline-block ; float: right  ; line-height: 7.5rem">
+          <label class="fee"><label class="rmb">¥</label>{{ totalFee }}</label>
         </div>
       </div>
       <div class="section">
-        <p><span>车牌号码</span><span>{{  carNo }}</span></p>
+        <p><span>车牌号码</span><span style="float: right">{{  carNo }}</span></p>
         <p><span>入场时间</span><span>{{ startTime }}</span></p>
         <!--<p><span>离场时间</span><span>{{ endTime }}</span></p>-->
         <p><span>停留时长</span><span>{{  time }}</span></p>
@@ -24,6 +24,10 @@
         <p>如有疑问请联系利和物业管理中心,联系电话：0760-85750000</p>
       </div>
       <div class="btn" @click="dopay">立即缴费</div>
+    </div>
+    
+    <div class="alert" v-if="show">
+      <p>{{alert}}</p>
     </div>
   </div>
 </template>
@@ -59,6 +63,8 @@
         orderNo: orderNo,
         openId: openId,
         payData: '',
+        show:false,
+        alert:''
       }
     },
     created() {
@@ -66,9 +72,19 @@
       document.title = '车牌支付'
     },
     methods: {
-      
+  
       
       dopay: function () {
+
+        if(this.totalFee  == 0 ){
+          this.alert = '当前无需缴费'
+          this.show = true
+          setTimeout(() => {
+            this.show = false
+          }, 2000)
+          return
+        }
+        
         localStorage.setItem('fee', this.totalFee)
         let p = {
           "channelId": this.browserType,
@@ -85,6 +101,7 @@
         window.location.href = url
       }
     },
+    
     computed: {
       browserType: function () {
         let userAgent = window.navigator.userAgent.toLowerCase();
@@ -94,7 +111,6 @@
          return  "ZFB"
         }
       },
-      
       
       time: function () {
         let end = this.endTime.replace(/-/g, '/'), start = this.startTime.replace(/-/g, '/')
@@ -115,13 +131,46 @@
       sub: function () {
         return encodeURI(this.carNo.substring(0, 1)) + '-' + this.carNo.substring(1)
       }
+    },
+    mounted(){
+      
+      let retcode = localStorage.getItem('retcode')
+      let retmsg = localStorage.getItem('retmsg')
+      if( retmsg.trim() !='' && retcode != 0 ){
+        this.alert = retmsg
+        this.show = true
+        setTimeout(() => {
+          this.show = false
+        }, 3000)
+        return
+      }
     }
   }
 
 </script>
 
-<style scoped>
+<style scoped lang="less">
+  .alert {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: auto;
+    height: 5rem;
+    width: 25rem;
+    background: rgba(45, 47, 59, 0.50);
+    border-radius: 50px;
   
+  p {
+    width: 100%;
+    height: 100%;
+    line-height: 5rem;
+    text-align: center;
+    color: #fff;
+    font-size: 1.8rem;
+  }
+  }
   .pay {
     position: absolute;
     background: #313235;
@@ -132,12 +181,13 @@
   
   .header {
     border-radius: 1.2rem;
-    display: flex;
-    display: -webkit-flex;
+    /*display: flex;*/
+    /*display: -webkit-flex;*/
+    position: fixed;
     height: 96%;
     width: 96%;
-    flex-direction: column;
-    align-items: center;
+    /*flex-direction: column;*/
+    /*align-items: center;*/
     background-color: white;
     border-radius: 10px;
     top: 0;
@@ -152,23 +202,24 @@
     font-size: 2rem;
     color: #2D2F3B;
     line-height: 6rem;
-    /*padding-left: 2.2rem;*/
-    /*align-self: flex-start;*/
+    padding-left: 2.2rem;
+    align-self: flex-start;
   }
   
   .feeinfo {
     background-color: #f6f6f6;
     width: 100%;
-    display: flex;
+    /*display: flex;*/
     height: 8.5rem;
-    justify-content: space-between;
-    align-items: center;
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
   }
   
   .vip {
     
     font-family: PingFangSC-Regular;
-    width: 94%;
+    width: 96%;
+    margin-left: 2%;
   }
   
   .vip p {
@@ -186,15 +237,20 @@
   }
   
   .feetitle {
+   display: inline-block;
+    margin-top: 10px;
     font-size: 1.4rem;
-    padding-top: 2.5rem;
+    padding-top: 0.5rem;
     align-self: flex-start;
     padding-left: 0.8rem;
     color: #ff473d;
+    line-height: 4.5rem
   }
   
   .fee {
-    font-size: 6rem;
+    display: inline-block;
+    float: right;
+    font-size: 4rem;
     color: #ff473d;
     font-weight: bold;
   }
@@ -205,8 +261,8 @@
   
   .section p {
     height: 4.2rem;
-    display: flex;
-    justify-content: space-between;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
     border-bottom: 1px solid #F5F5F5;
   }
   
@@ -218,11 +274,14 @@
   }
   
   p span:nth-child(1) {
+    margin-left: 2%;
     font-family: PingFangSC-Regular;
     color: #111;
   }
   
   p span:nth-child(2) {
+    float: right;
+    /*margin-right: 2%;*/
     color: #C2C6DA;
   }
   
@@ -245,7 +304,7 @@
     width: 100%;
     height: 5rem;
     text-align: center;
-    align-self: flex-end;
+    /*align-self: flex-end;*/
     position: absolute;
     bottom: 0;
     background: #A07C70;

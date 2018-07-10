@@ -15,23 +15,37 @@
   </style>
   <script type="text/javascript">
     
-    let userAgent = window.navigator.userAgent.toLowerCase();
+    var userAgent = window.navigator.userAgent.toLowerCase();
     
-    if (userAgent.match(/MicroMessenger/i) == 'micromessenger') {
+    try {
       
+      if (userAgent.match(/MicroMessenger/i) == 'micromessenger') {
+        
+        window.location.href = window.openUrl + '?reqSource=WX_JTC&codeType=base&redirectUrl=' + window.redirectUrl;
+       
+        
+      } else if (userAgent.match(/Alipay/i) == 'alipay') {
+        
+        window.location.href = window.openUrlzfb + '?reqSource=WX_JTC&codeType=base&scope=auth_base&redirectUrl=' + window.redirectUrl;
+        
+      } else {
+        
+        window.location.href = window.openUrl + '?reqSource=WX_JTC&codeType=base&redirectUrl=' + window.redirectUrl;
+        
+      }
+      
+    }
+    catch (e) {
+      alert(e.message)
+      alert(window.navigator.userAgent)
       window.location.href = window.openUrl + '?reqSource=WX_JTC&codeType=base&redirectUrl=' + window.redirectUrl;
-      
-    } else if (userAgent.match(/Alipay/i) == 'alipay') {
-      
-      window.location.href = window.openUrlzfb + '?reqSource=WX_JTC&codeType=base&scope=auth_base&redirectUrl=' + window.redirectUrl;
-  
     }
   
   
   </script>
 </head>
-<body style="margin: 0; padding: 0">
-<div id="app">
+<body>
+<div>
 </div>
 
 </body>

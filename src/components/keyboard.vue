@@ -154,6 +154,7 @@
   }
 
   .item {
+    color: #000;
     font-size: 2rem;
     background: #FFF;
     box-shadow: 0 2px 0 0 #686A6E;

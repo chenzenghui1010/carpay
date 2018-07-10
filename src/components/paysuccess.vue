@@ -100,18 +100,20 @@
 <style scoped>
   
   .main {
+    padding: 3rem  0  0 0;
     background-color: #313235;
-    display: flex;
-    flex-direction: column;
+    /*display: flex;*/
+    /*flex-direction: column;*/
     width: 100%;
+    text-align: center;
   }
   
   .fail {
     margin: 8rem auto 1rem;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
   }
   
   .time {
@@ -148,12 +150,10 @@
   }
   
   .payinfo {
-    
-    margin: 4rem auto 2rem;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
   }
   
   .cashicon {
@@ -169,7 +169,7 @@
   }
   
   .msg {
-    
+    display: inline-block;
     text-align: center;
     margin-left: 15px;
   }
@@ -181,7 +181,8 @@
   }
   
   .paymoney {
-    
+    display: block;
+    margin: 10% 0 0  15%;
     background: url("../assets/paysuccessbg.png") no-repeat center/21.5rem 4.3rem;
     width: 70%;
     overflow: visible;
@@ -194,7 +195,7 @@
   }
   
   .payyes {
-    
+    margin: 0 auto;
     background: url("../assets/paysuccessyes.png") no-repeat center/ 9rem;
     overflow-clip: visible;
     width: 9rem;
@@ -205,6 +206,7 @@
   }
   
   .failimg {
+    margin: 0 auto;
     background: url("../assets/fail.png") no-repeat center/ 9rem;
     overflow-clip: visible;
     width: 9rem;

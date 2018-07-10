@@ -1,21 +1,22 @@
 <template>
   <div class="main">
-    <div class="car"></div>
+    <div class="car">
+      <img src="../assets/LOGO.png"/></div>
     <div class="inputitem">
       <div v-for="(i,index) in count" v-bind:class="getchunkstyle(i - 1)" v-bind:key="i" @click="deleteCarNo">
         {{getLetter(i - 1) }}
       </div>
     </div>
-    <div class="tip">
+    <div  class="tip">
       <div class="checkbox">
         <input type="checkbox" id="checkbox1" v-model="newresourcecar">
         <label for="checkbox1"></label>新能源车
       </div>
     </div>
-    <button v-bind:class="{enable :enable}"   class="btn" :disabled="disabled" @click="doquery">去缴费</button>
+    <button v-bind:class="{enable :enable}" class="btn" :disabled="disabled" @click="doquery">去缴费</button>
     <carnokeyboard v-on:select="selectletter" v-on:delete="deleteletter" v-show="begininput"
                    v-bind:inputtype="inputtype"></carnokeyboard>
-    <div class="vip">
+    <div  class="vip">
       <div>会员优惠时间:</div>
       <div style="font-size: 1.4rem;">10：00-22：00周日到周四</div>
       <div style="font-size: 1.4rem;">10：00-22：30周五到周六</div>
@@ -59,6 +60,13 @@
     
     created() {
       document.title = '停车缴费'
+      if (localStorage.getItem('carNo') == null) {
+        this.carno = ''
+      } else {
+        this.carno = localStorage.getItem('carNo')
+        this.begininput = false
+        this.disabled = false
+      }
     },
     
     mounted() {
@@ -66,11 +74,19 @@
         this.begininput = false
         this.inputindex = 7
       }
+      if (localStorage.getItem('carNo') == null) {
+        this.carno = ''
+      } else {
+        this.carno = localStorage.getItem('carNo')
+        this.begininput = false
+        this.disabled = false
+      }
+      
     },
     watch: {
       carno: function (newvalue) {
         this.enable = newvalue.length > 6
-        this.newValue  == 7? this.disabled = false :this.disabled = true
+        this.newValue == 7 ? this.disabled = false : this.disabled = true
       },
       
       newresourcecar: function (newvalue) {
@@ -91,7 +107,6 @@
       }
       ,
       doquery: function () {
-        
         let id = getQueryString('clientId')
         let url =  window.carnoPayUrl
         var carpay = {
@@ -101,17 +116,24 @@
         }
         this.$axios.post(url, carpay).then(res => {
           if (res.data.resultCode == 0) {
-            if (res.data.dataItems[0].attributes.retcode == '0') {
-              localStorage.setItem('carNo', this.carno)
-              let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
-              window.location.href = './pay.html?openId=' + id + '&endTime=' + endTime + '&startTime=' + startTime + '&totalFee=' + totalFee + '&orderNo=' + orderNo
-            } else {
+  
+            if (res.data.dataItems[0].attributes.retcode == '1' ||  res.data.dataItems[0].attributes.retcode == '2') {
               this.alert = res.data.dataItems[0].attributes.retmsg
               this.show = true
               setTimeout(() => {
                 this.show = false
-              }, 1000)
+              }, 3000)
+              return
             }
+            
+            localStorage.setItem('retcode',res.data.dataItems[0].attributes.retcode)
+            localStorage.setItem('retmsg',res.data.dataItems[0].attributes.retmsg)
+            
+            if (res.data.dataItems[0].attributes.retcode != '1' || res.data.dataItems[0].attributes.retcode != '2') {
+              localStorage.setItem('carNo', this.carno)
+              let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
+              window.location.href = './pay.html?openId=' + id + '&endTime=' + endTime + '&startTime=' + startTime + '&totalFee=' + totalFee + '&orderNo=' + orderNo
+             }
           } else if (res.data.resultCode == 1) {
             this.alert = '系统错误'
             this.show = true
@@ -121,7 +143,6 @@
           }
         })
       },
-      
       doinput: function () {
         if (this.begininput) {
           return
@@ -182,7 +203,7 @@
         if (this.newresourcecar == false) {
           
           if (this.inputindex == 6) {
-           
+            
             return 3
             
           }
@@ -217,20 +238,8 @@
 
 </script>
 
-<style scoped>
+<style scoped lang="less">
   
-  .vip {
-    margin-top: 5%;
-    float: left;
-    width: 90%;
-    color: #A17D71;
-  }
-  
-  .vip div {
-    margin-top: 5px;
-    font-size: 1.6rem;
-    letter-spacing: 4px;
-  }
   
   .alert {
     top: 0;
@@ -243,46 +252,56 @@
     width: 25rem;
     background: rgba(45, 47, 59, 0.50);
     border-radius: 50px;
-  }
-  
-  .alert p {
-    width: 100%;
-    height: 100%;
-    line-height: 5rem;
-    text-align: center;
-    color: #fff;
-    font-size: 1.8rem;
+    
+    p {
+      width: 100%;
+      height: 100%;
+      line-height: 5rem;
+      text-align: center;
+      color: #fff;
+      font-size: 1.8rem;
+    }
   }
   
   .main {
     width: 100%;
     height: 100%;
-    position: absolute;
-    display: flex;
-    display: -webkit-flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: whitesmoke;
+    position: fixed;
+    /*display: flex;*/
+    /*display: -webkit-flex;*/
+    /*flex-direction: column;*/
+    /*-webkit-flex-direction: column;*/
+    /*align-items: center;*/
+    /*background-color: whitesmoke;*/
   }
   
-  .car {
+  .car > img {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    display: block;
+    width: 10rem;
+    height: 10rem;
+    margin: 2.5rem auto;
+  }
+  
+  /*.car {
     margin-top: 2.5rem;
     margin-bottom: 2.5rem;
     width: 20rem;
     height: 10rem;
     background: url("../assets/LOGO.png") no-repeat center / 10rem;
     overflow: visible;
-  }
+  }*/
   
   .inputitem {
-    display: flex;
+    margin-left: 5%;
+    /*display: flex;*/
     height: 4rem;
     width: 90%;
     background-color: white;
     display: flex;
     display: -webkit-flex;
     -webkit-box-align: center;
-    /*align-items: center;*/
   }
   
   .chunk {
@@ -325,9 +344,7 @@
   }
   
   .tip {
-    display: flex;
-    justify-content: flex-end;
-    margin: 1rem auto;
+    margin: 1rem auto  5rem auto ;
     width: 90%;
     font-size: 1.2rem;
     color: #b8c2c7;
@@ -356,7 +373,6 @@
     width: 20px;
     height: 20px;
     display: inline-block;
-    
     margin-right: 1rem;
   }
   
@@ -376,42 +392,36 @@
   }
   
   .checkbox {
-    
     position: relative;
+    float: right;
     color: #2D2F3B;
     font-size: 1.4rem;
   }
   
   .btn {
+    display: block;
+    margin-left: 5%;
     width: 90%;
     height: 4rem;
-    margin-top: 0.5rem;
     border-radius: 5px;
     text-align: center;
-    /*line-height: 4rem;*/
     font-size: 1.4rem;
-    margin-top: 5rem;
     color: #b8c2c7;
     font-size: 1.8rem;
     border: 1px solid #d8d8d8;
   }
   
   .enable {
-    
     background-color: #A17D71;
     color: white;
     font-size: 1.4rem;
   }
   
-  .disable {
-  
-  }
-  
   img {
-    display: inline-block;
-    width: 11rem;
-    text-align: center;
-    height: 6.9rem;
+  display: inline-block;
+  width: 11rem;
+  text-align: center;
+  height: 6.9rem;
   }
   
   button {
@@ -419,6 +429,18 @@
     outline: none;
     border: none;
     
+  }
+  
+  .vip {
+   margin-left: 5%;
+    margin-top: 5%;
+    width: 90%;
+    color: #A17D71;
+    div {
+      margin-top: 5px;
+      font-size: 1.6rem;
+      letter-spacing: 4px;
+    }
   }
 
 </style>
