@@ -1,26 +1,34 @@
 <template>
   <div class="main">
+    
     <div class="car">
-      <img src="../assets/LOGO.png"/></div>
+      <img src="../assets/LOGO.png"/>
+    </div>
+    
     <div class="inputitem">
       <div v-for="(i,index) in count" v-bind:class="getchunkstyle(i - 1)" v-bind:key="i" @click="deleteCarNo">
         {{getLetter(i - 1) }}
       </div>
     </div>
-    <div  class="tip">
+    
+    <div class="tip">
       <div class="checkbox">
         <input type="checkbox" id="checkbox1" v-model="newresourcecar">
         <label for="checkbox1"></label>新能源车
       </div>
     </div>
+    
     <button v-bind:class="{enable :enable}" class="btn" :disabled="disabled" @click="doquery">去缴费</button>
+    
     <carnokeyboard v-on:select="selectletter" v-on:delete="deleteletter" v-show="begininput"
                    v-bind:inputtype="inputtype"></carnokeyboard>
-    <div  class="vip">
+    
+    <div class="vip">
       <div>会员优惠时间:</div>
       <div style="font-size: 1.4rem;">10：00-22：00周日到周四</div>
       <div style="font-size: 1.4rem;">10：00-22：30周五到周六</div>
     </div>
+    
     <div class="alert" v-if="show">
       <p>{{alert}}</p>
     </div>
@@ -34,8 +42,11 @@
   import Carnokeyboard from "./keyboard.vue";
   
   export default {
+    
     components: {Carnokeyboard},
+    
     name: 'querycar',
+    
     data() {
       return {
         carno: '',
@@ -50,108 +61,172 @@
         show: false,
         alert: '',
         disabled: true,
-        formData: {
-          phone: "",
-          code: '',
-        },
+        formData: {phone: "", code: '',},
         timer: null,
       }
     },
     
     created() {
+      
       document.title = '停车缴费'
+      
       if (localStorage.getItem('carNo') == null) {
+        
         this.carno = ''
       } else {
+        
         this.carno = localStorage.getItem('carNo')
+        
         this.begininput = false
+        
         this.disabled = false
       }
     },
     
     mounted() {
+      
       if (!(this.carno == '' || this.carno == null)) {
+        
         this.begininput = false
+        
         this.inputindex = 7
       }
+      
       if (localStorage.getItem('carNo') == null) {
+        
         this.carno = ''
+        
       } else {
+        
         this.carno = localStorage.getItem('carNo')
+        
         this.begininput = false
+        
         this.disabled = false
       }
       
     },
     watch: {
+      
       carno: function (newvalue) {
+        
         this.enable = newvalue.length > 6
+        
         this.newValue == 7 ? this.disabled = false : this.disabled = true
       },
       
       newresourcecar: function (newvalue) {
+        
         this.count = this.newresourcecar ? 8 : 7
       },
     },
     
     methods: {
+      
       deleteCarNo: function () {
-        this.begininput = true
         
+        this.begininput = true
       },
+      
       getLetter: function (index) {
+        
         if (index >= this.carno.length) {
+          
           return ''
         }
+        
         return this.carno[index]
-      }
-      ,
+      },
+      
       doquery: function () {
+        
         let id = getQueryString('clientId')
-        let url =  window.carnoPayUrl
+        
+        let url = window.carnoPayUrl
+        
         var carpay = {
+          
           'parkCode': this.parkCode,
+          
           'carNo': this.carno,
+          
           'orderType': 'VNP'
         }
+        
         this.$axios.post(url, carpay).then(res => {
+          
           if (res.data.resultCode == 0) {
-  
-            if (res.data.dataItems[0].attributes.retcode == '1' ||  res.data.dataItems[0].attributes.retcode == '2') {
+            
+            if (res.data.dataItems[0].attributes.retcode == '1' || res.data.dataItems[0].attributes.retcode == '2') {
+              
               this.alert = res.data.dataItems[0].attributes.retmsg
+              
               this.show = true
+              
               setTimeout(() => {
+                
                 this.show = false
+                
               }, 3000)
+              
               return
             }
             
-            localStorage.setItem('retcode',res.data.dataItems[0].attributes.retcode)
-            localStorage.setItem('retmsg',res.data.dataItems[0].attributes.retmsg)
+            localStorage.setItem('retcode', res.data.dataItems[0].attributes.retcode)
+            
+            localStorage.setItem('retmsg', res.data.dataItems[0].attributes.retmsg)
+            
             
             if (res.data.dataItems[0].attributes.retcode != '1' || res.data.dataItems[0].attributes.retcode != '2') {
+              
               localStorage.setItem('carNo', this.carno)
+              
               let {endTime, startTime, totalFee, orderNo} = res.data.dataItems[0].attributes
+              
               window.location.href = './pay.html?openId=' + id + '&endTime=' + endTime + '&startTime=' + startTime + '&totalFee=' + totalFee + '&orderNo=' + orderNo
-             }
-          } else if (res.data.resultCode == 1) {
-            this.alert = '系统错误'
-            this.show = true
-            setTimeout(() => {
-              this.show = false
-            }, 1000)
+            }
+          } else {
+            
+            if (res.data.message) {
+              
+              this.alert = res.data.message
+              
+              this.show = true
+              
+              setTimeout(() => {
+                
+                this.show = false
+              }, 3000)
+              
+            } else {
+              
+              this.alert = '系统错误'
+              
+              this.show = true
+              
+              setTimeout(() => {
+                
+                this.show = false
+              }, 3000)
+            }
           }
         })
       },
+      
       doinput: function () {
+        
         if (this.begininput) {
+          
           return
         }
+        
         this.carno = ''
+        
         this.begininput = true
+        
         this.inputindex = 0
-      }
-      ,
+      },
+      
       deleteletter: function () {
         
         this.inputindex = Math.max(0, this.inputindex - 1)
@@ -165,8 +240,8 @@
         this.carno = this.carno + value
         
         this.inputindex += 1
-      }
-      ,
+      },
+      
       getchunkstyle: function (index) {
         
         if (!this.newresourcecar) {
@@ -191,46 +266,60 @@
     },
     
     computed: {
+      
       inputtype: function () {
+        
         if (this.inputindex == 0) {
           
           return 0
         }
+        
         if (this.inputindex == 1) {
           
           return 1
         }
+        
         if (this.newresourcecar == false) {
           
           if (this.inputindex == 6) {
             
             return 3
-            
           }
+          
           if (this.inputindex == 7) {
+            
             this.enable = true
+            
             this.disabled = false
             
             this.begininput = false
-            
           }
-          
         }
+        
         if (this.newresourcecar == true) {
+          
           if (this.inputindex == 7) {
+            
             this.enable = false
+            
             this.disabled = true
+            
             this.begininput = true
+            
             return 3
           }
+          
           if (this.inputindex == 8) {
+            
             this.enable = true
+            
             this.disabled = false
+            
             this.begininput = false
             
           }
-          
         }
+        
         return 2
       },
     },
@@ -319,7 +408,6 @@
   }
   
   .chunk:first-child {
-    
     border: 1px solid #979797;
   }
   
@@ -333,7 +421,6 @@
   }
   
   .deepgreencolor {
-    
     background-color: #7ed321;
     color: white;
   }
@@ -344,7 +431,7 @@
   }
   
   .tip {
-    margin: 1rem auto  5rem auto ;
+    margin: 1rem auto 5rem auto;
     width: 90%;
     font-size: 1.2rem;
     color: #b8c2c7;
@@ -352,12 +439,10 @@
   }
   
   input[type=checkbox] {
-    
     display: none;
   }
   
   label {
-    
     display: inline-block;
     height: 20px;
     width: 20px;
@@ -368,7 +453,6 @@
   }
   
   label::before {
-    
     content: '';
     width: 20px;
     height: 20px;
@@ -377,7 +461,6 @@
   }
   
   input:checked + label::before {
-    
     border: 2px solid #7ed321;
     border-top: none;
     border-right: none;
@@ -418,21 +501,20 @@
   }
   
   img {
-  display: inline-block;
-  width: 11rem;
-  text-align: center;
-  height: 6.9rem;
+    display: inline-block;
+    width: 11rem;
+    text-align: center;
+    height: 6.9rem;
   }
   
   button {
     background: whitesmoke;
     outline: none;
     border: none;
-    
   }
   
   .vip {
-   margin-left: 5%;
+    margin-left: 5%;
     margin-top: 5%;
     width: 90%;
     color: #A17D71;

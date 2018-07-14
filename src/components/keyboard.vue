@@ -49,11 +49,10 @@
         if (this.inputtype == 1) {
 
           return 'count '
-
+          
         } else if (this.inputtype == 2) {
 
           return ' special '
-
         }
       },
 
@@ -63,18 +62,18 @@
         if (this.inputtype == 0) {
 
           return keyboarditems_0
-
         }
+        
         if (this.inputtype == 1) {
 
           return keyboarditems_1
-
         }
+        
         if (this.inputtype == 2) {
 
           return keyboarditems_2
-
         }
+        
         if (this.inputtype == 3) {
 
           return keyboarditems_3
@@ -86,6 +85,7 @@
 
         this.$emit('delete')
       },
+      
       onselect: function (value) {
         
         if (this.inputtype == 1) {
@@ -104,11 +104,9 @@
           if (value == '港' || value == '澳' || value == '学') {
 
             return
-
           }
 
         this.$emit('select', value)
-
       }
     }
   }
@@ -138,10 +136,7 @@
     margin: 0 auto;
     padding-top: 2% ;
   }
-
-  .container {
-
-  }
+  
 
   .line {
     display: flex;
@@ -150,7 +145,6 @@
     -webkit-justify-content: center;
     align-items: center;
     -webkit-align-content: center;
-
   }
 
   .item {
@@ -167,16 +161,13 @@
 
   .delete {
     position: absolute;
-    /*top: 100px;*/
     bottom: 1rem;
     width: 10%;
     height: 4rem;
     font-size: 1.5rem;
     right: 0.4rem;
     background: #AFB3BE;
-    /*box-shadow: 0 2px 0 0 #686A6E;*/
     border-radius: 10px;
     background: #AFB3BE url("../assets/return.png") no-repeat center/ 25px;
-
   }
 </style>

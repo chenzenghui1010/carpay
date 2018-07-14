@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    
     <div :class=" btn ? 'payinfo':'fail' ">
       <img class="cashicon" src="../assets/paysuccesscash.png"/>
       <div class="msg">
@@ -7,17 +8,16 @@
         <div class="tip" v-text="list"></div>
       </div>
     </div>
+    
     <div v-if="btn" class="paymoney"> 支付 ¥ {{ fee }}</div>
     <div v-if="btn" :class=" btn ? 'payyes':'statusimg' "></div>
     <div v-if=" !btn" :class=" btn ? 'payyes':'failimg' "></div>
-    <!--<div class="logo">-->
-    <!--<img class="logoimg" src="../assets/LOGO.png" alt="">-->
-    <!--</div>-->
     
     <div v-if="btn" class="time">
       <p>请您于20分钟内完成离场，谢谢！</p>
       <button @click="eInvoice">开电子发票</button>
     </div>
+    
   </div>
 </template>
 
@@ -25,31 +25,24 @@
   
   import {getQueryString, doAjax} from "../utils/globalhelper";
   
-  
   export default {
+    
     name: 'paysuccess',
+    
     data() {
+      
       return {
+        
         dataList: {},
         status: '',
         list: '',
         fee:localStorage.getItem('fee'),
         btn: false,
-        mm: 19,
-        ss: 59
       }
     },
     created() {
+      
         let payType = getQueryString('result')
-      
-      //   let url = window.orderQueUrl+'?ver=' + new Date().getTime() + '&serviceId=ac.pay.querypayresult&attributes={"orderNo":"' + orderNo + '"}'
-      //
-      //   this.$axios.post(url, {}).then(res => {
-      //
-      //     this.dataList = res.data.attributes
-      // let url = window.location.href
-      // let payType = (this.$route.query.result)
-      
       
       if(payType == 'SUCCESS') {
   
@@ -64,36 +57,15 @@
         this.status = '支付失败!'
   
         this.list = '支付失败，请重新支付'
-        
-        
       }
-      // this.setTime()
     },
     methods: {
       
       eInvoice() {
         
         window.location.href = 'https://weixin.jslife.com.cn/jtc-front/dist/eInvoice.html?key=880075565130008'
-        
-      }
-      ,
-      setTime() {
-        window.setInterval(() => {
-          if (this.ss != 1) {
-            this.ss--
-          } else {
-            if (this.mm == 0 && this.ss == 1) {
-              document.getElementById('span').innerText = '已过期 '
-            } else {
-              this.mm -= 1
-              this.ss = 59
-            }
-          }
-          
-        }, 1000)
       },
     }
-    
   }
 </script>
 
@@ -102,8 +74,6 @@
   .main {
     padding: 3rem  0  0 0;
     background-color: #313235;
-    /*display: flex;*/
-    /*flex-direction: column;*/
     width: 100%;
     text-align: center;
   }
@@ -111,9 +81,6 @@
   .fail {
     margin: 8rem auto 1rem;
     width: 100%;
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
   }
   
   .time {
@@ -151,9 +118,6 @@
   
   .payinfo {
     width: 100%;
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
   }
   
   .cashicon {
